@@ -85,6 +85,7 @@
       padding: 10px 0;
       gap: 14px;
       will-change: transform;
+      overflow: hidden;
     }
 
     .player-name {
@@ -109,19 +110,19 @@
 
     .tick {
       width: 100%;
-      height: 54px;
+      height: calc(100% + 10px);
       background: #0977cc;
       border-radius: 0;
-      margin-top: -17px;
-      margin-bottom: -17px;
+      margin-top: -5px;
+      margin-bottom: -5px;
     }
 
     .tick-empty {
       width: 100%;
-      height: 54px;
+      height: calc(100% + 10px);
       background: transparent;
-      margin-top: -17px;
-      margin-bottom: -17px;
+      margin-top: -5px;
+      margin-bottom: -5px;
     }
 
     .hr-count {
@@ -144,8 +145,8 @@
     @media (orientation: portrait) {
       #title { font-size: 15px; }
       .player-name { font-size: 15px; width: 130px; min-width: 130px; }
-      .tick { height: 50px; margin-top: -17px; margin-bottom: -17px; }
-      .tick-empty { height: 50px; margin-top: -17px; margin-bottom: -17px; }
+      .tick { height: calc(100% + 10px); margin-top: -5px; margin-bottom: -5px; }
+      .tick-empty { height: calc(100% + 10px); margin-top: -5px; margin-bottom: -5px; }
       .hr-count { font-size: 15px; min-width: 24px; }
     }
   </style>
