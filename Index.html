@@ -1,0 +1,629 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="apple-mobile-web-app-status-bar-style" content="black"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="apple-mobile-web-app-title" content="Dodger HRs"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="theme-color" content="#000000"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;Dodger Home Runs&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700&amp;display=swap" rel="stylesheet"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>*, *::before, *::after {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>box-sizing: border-box;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>margin: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>-webkit-tap-highlight-color: transparent;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>html, body {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>height: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: #000;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', -apple-system, 'Helvetica Neue', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>-webkit-font-smoothing: antialiased;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>overflow-x: hidden;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>::-webkit-scrollbar { display: none; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>* { scrollbar-width: none; -ms-overflow-style: none; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#app {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>min-height: 100vh;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>min-height: -webkit-fill-available;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding-top: max(env(safe-area-inset-top), 20px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding-bottom: max(env(safe-area-inset-bottom), 40px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#inner {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding-left: max(env(safe-area-inset-left), 24px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding-right: max(env(safe-area-inset-right), 24px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>/* ── Header ── */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#header {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>justify-content: space-between;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>margin-bottom: 2em;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#header-left {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>gap: 10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#title {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 700;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>letter-spacing: -0.1px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>white-space: nowrap;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#year-btn {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 700;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: 0.5px solid #6e6e6e;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-radius: 4px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding: 2px 8px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transition: border-color 0.15s;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>line-height: 1.4;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#year-btn:active { border-color: #888; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#header-right {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>gap: 14px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#last-updated {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 11px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #666;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>white-space: nowrap;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#sort-btn {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding: 2px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>justify-content: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transition: opacity 0.15s;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#sort-btn:active { opacity: 0.5; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>/* ── Year dropdown overlay ── */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#year-overlay {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>position: fixed;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>top: 0; left: 0; right: 0; bottom: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>z-index: 100;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: rgba(0,0,0,0.7);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#year-overlay.open { display: block; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#year-dropdown {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>position: absolute;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: #0a0a0a;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: 0.5px solid #6e6e6e;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-radius: 6px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>overflow-y: scroll;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>-webkit-overflow-scrolling: touch;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>max-height: 70vh;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>width: 80px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.year-option {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: block;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>width: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding: 10px 8px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 700;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-bottom: 0.5px solid #222;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-align: left;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>cursor: pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transition: background 0.1s;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.year-option:last-child { border-bottom: none; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.year-option:active { background: #1a1a1a; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.year-option.active { color: #0977cc; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>/* ── Player list ── */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#player-list {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>width: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transition: opacity 0.25s ease, transform 0.25s ease;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#player-list.fade-out {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>opacity: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transform: translateY(-8px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#player-list.fade-in {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>opacity: 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>transform: translateY(0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.player-row {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: flex;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>align-items: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-bottom: 0.5px solid #6e6e6e;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>gap: 14px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>will-change: transform;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>height: 40px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.player-name {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 400;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>width: 190px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>min-width: 190px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>white-space: nowrap;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>letter-spacing: -0.1px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>flex-shrink: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.tick-area {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>flex: 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>height: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>min-width: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>overflow-x: auto;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>overflow-y: hidden;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>-webkit-overflow-scrolling: touch;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.tick-area svg {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: block;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>height: 100%;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.hr-count {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 18px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 400;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>min-width: 32px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-align: right;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>flex-shrink: 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#status-msg {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #444;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 13px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-align: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>margin-top: 48px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#portrait-note {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: none;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #6e6e6e;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 16px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-weight: 700;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>letter-spacing: 0.05em;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-align: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>margin-top: 32px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-transform: uppercase;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#version {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display: block;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-family: 'Bricolage Grotesque', sans-serif;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>color: #6e6e6e;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>font-size: 11px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>text-align: center;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>margin-top: 8px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>@media (orientation: portrait) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>#title { font-size: 15px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>#year-btn { font-size: 15px; padding: 4px 8px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.player-name { font-size: 15px; width: 130px; min-width: 130px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.hr-count { font-size: 15px; min-width: 24px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>#portrait-note { display: block; font-size: 13px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.year-option { font-size: 15px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>#header { padding-bottom: 2px; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;div id="app"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="inner"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="header"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="header-left"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div id="title"&gt;Dodger Home Runs&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="year-btn"&gt;2026&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div id="header-right"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;span id="last-updated"&gt;&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="sort-btn" title="Toggle sort" aria-label="Toggle sort order"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;circle cx="8.5" cy="5.5" r="2.5" stroke="#ffffff" stroke-width="1.6"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;line x1="2" y1="5.5" x2="6" y2="5.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;line x1="11" y1="5.5" x2="26" y2="5.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;circle cx="19.5" cy="16.5" r="2.5" stroke="#ffffff" stroke-width="1.6"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;line x1="2" y1="16.5" x2="17" y2="16.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;line x1="22" y1="16.5" x2="26" y2="16.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/svg&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="player-list"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="status-msg"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="portrait-note"&gt;Best in landscape view&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="version"&gt;V12&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">&lt;!-- Year picker overlay --&gt;</span></p>
+<p class="p1"><span class="s1">&lt;div id="year-overlay"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="year-dropdown"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const TEAM_ID = 119;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const CURRENT_YEAR = 2026;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const YEARS = [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>for (let y = CURRENT_YEAR; y &gt;= 2013; y--) YEARS.push(y);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const POLL_MS = 60000;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const MAX_TICKS = 62;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const BAR_COLOR = '#0977cc';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const ROW_H = 40;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const BAR_PADDING = 3;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const PLACEHOLDER = [</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Shohei Ohtani', <span class="Apple-converted-space">      </span>hr: 8 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Freddie Freeman', <span class="Apple-converted-space">    </span>hr: 5 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Teoscar Hernández', <span class="Apple-converted-space">  </span>hr: 4 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Will Smith',<span class="Apple-converted-space">          </span>hr: 3 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Max Muncy', <span class="Apple-converted-space">          </span>hr: 3 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Dalton Rushing',<span class="Apple-converted-space">      </span>hr: 2 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Andy Pages',<span class="Apple-converted-space">          </span>hr: 2 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Hyeseong Kim',<span class="Apple-converted-space">        </span>hr: 1 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Miguel Rojas',<span class="Apple-converted-space">        </span>hr: 1 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Alex Call', <span class="Apple-converted-space">          </span>hr: 0 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Santiago Espinal',<span class="Apple-converted-space">    </span>hr: 0 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Kyle Tucker', <span class="Apple-converted-space">        </span>hr: 0 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Michael Conforto',<span class="Apple-converted-space">    </span>hr: 0 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>{ name: 'Tommy Edman', <span class="Apple-converted-space">        </span>hr: 0 },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>];</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let sortMode = 'most';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let players = [];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let animating = false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let dataLoaded = false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let selectedYear = CURRENT_YEAR;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let pollTimer = null;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Build year dropdown ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const dropdown = document.getElementById('year-dropdown');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>YEARS.forEach(y =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const btn = document.createElement('button');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>btn.className = 'year-option' + (y === CURRENT_YEAR ? ' active' : '');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>btn.textContent = y;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>btn.dataset.year = y;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>btn.addEventListener('click', () =&gt; selectYear(y));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>dropdown.appendChild(btn);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.getElementById('year-btn').addEventListener('click', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const btn = document.getElementById('year-btn');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const rect = btn.getBoundingClientRect();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const dropdown = document.getElementById('year-dropdown');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>dropdown.style.left = rect.left + 'px';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>dropdown.style.top = (rect.bottom + 4) + 'px';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById('year-overlay').classList.add('open');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.getElementById('year-overlay').addEventListener('click', (e) =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (e.target === document.getElementById('year-overlay')) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>document.getElementById('year-overlay').classList.remove('open');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function selectYear(y) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById('year-overlay').classList.remove('open');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (y === selectedYear) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>selectedYear = y;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById('year-btn').textContent = y;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.querySelectorAll('.year-option').forEach(b =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>b.classList.toggle('active', parseInt(b.dataset.year) === y);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// Stop live polling if not current year</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById('last-updated').textContent = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>document.getElementById('last-updated').style.display = 'none';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>loadYear(y);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Utilities ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function formatTime(d) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function sortPlayers(list, mode) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const copy = [...list];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (mode === 'most') {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>copy.sort((a, b) =&gt; b.hr - a.hr || a.name.localeCompare(b.name));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>copy.sort((a, b) =&gt; a.name.localeCompare(b.name));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return copy;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── SVG tick builder (draws N filled ticks out of MAX_TICKS slots) ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function buildTickSVG(hr, displayHr) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// hr = actual count, displayHr = how many to visually show (for animation)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const d = displayHr !== undefined ? displayHr : hr;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const slots = Math.max(MAX_TICKS, hr);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const barH = ROW_H - BAR_PADDING * 2;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const barY = BAR_PADDING;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const slotW = 100 / MAX_TICKS;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const viewW = slots * slotW;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const gapFrac = 0.18;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const barW = slotW * (1 - gapFrac);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const svgNS = 'http://www.w3.org/2000/svg';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const svg = document.createElementNS(svgNS, 'svg');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>svg.setAttribute('viewBox', `0 0 ${viewW} ${ROW_H}`);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>svg.setAttribute('preserveAspectRatio', 'none');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>svg.style.width = hr &gt; MAX_TICKS ? `${(hr / MAX_TICKS) * 100}%` : '100%';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>for (let i = 0; i &lt; d; i++) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const rect = document.createElementNS(svgNS, 'rect');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rect.setAttribute('x', i * slotW + slotW * (gapFrac / 2));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rect.setAttribute('y', barY);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rect.setAttribute('width', barW);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rect.setAttribute('height', barH);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>rect.setAttribute('fill', BAR_COLOR);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>svg.appendChild(rect);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return svg;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Render list (names + 0 ticks initially for grow-in, or full for instant) ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function renderList(sorted, instant) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const container = document.getElementById('player-list');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>container.innerHTML = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>sorted.forEach(p =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const row = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.className = 'player-row';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.dataset.name = p.name;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.dataset.hr = p.hr;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const nameEl = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>nameEl.className = 'player-name';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>nameEl.textContent = p.name;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const tickArea = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>tickArea.className = 'tick-area';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>tickArea.appendChild(buildTickSVG(p.hr, instant ? p.hr : 0));</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const countEl = document.createElement('div');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>countEl.className = 'hr-count';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>countEl.textContent = instant ? p.hr : 0;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.appendChild(nameEl);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.appendChild(tickArea);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>row.appendChild(countEl);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>container.appendChild(row);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── HR grow-in animation ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// Increments displayed HR count one tick at a time across all rows simultaneously</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function animateHRGrowIn(sorted) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const maxHR = Math.max(...sorted.map(p =&gt; p.hr), 0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (maxHR === 0) return;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const rows = document.querySelectorAll('.player-row');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const rowMap = {};</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>rows.forEach(r =&gt; { rowMap[r.dataset.name] = r; });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>let tick = 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const TICK_SPEED = 40; // ms per tick — fast progress bar feel</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const timer = setInterval(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>tick++;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>sorted.forEach(p =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const row = rowMap[p.name];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (!row) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const show = Math.min(tick, p.hr);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const tickArea = row.querySelector('.tick-area');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const countEl = row.querySelector('.hr-count');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>tickArea.innerHTML = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>tickArea.appendChild(buildTickSVG(p.hr, show));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>countEl.textContent = show;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (tick &gt;= maxHR) clearInterval(timer);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}, TICK_SPEED);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Sort animation (FLIP) ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function animateSort(newSorted) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (animating) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>animating = true;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const container = document.getElementById('player-list');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const oldPos = {};</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>container.querySelectorAll('.player-row').forEach(r =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>oldPos[r.dataset.name] = r.getBoundingClientRect().top;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>renderList(newSorted, true); // instant, no grow-in on sort</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>requestAnimationFrame(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>requestAnimationFrame(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>container.querySelectorAll('.player-row').forEach(r =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const old = oldPos[r.dataset.name];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>if (old === undefined) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const diff = old - r.getBoundingClientRect().top;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>if (diff !== 0) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>r.style.transition = 'none';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>r.style.transform = `translateY(${diff}px)`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>requestAnimationFrame(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>r.style.transition = 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>r.style.transform = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; { animating = false; }, 500);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Year transition: fade out → render names → grow in HRs ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function transitionToYear(sorted) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const container = document.getElementById('player-list');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>// 1. Fade out + slide up</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>container.style.transition = 'opacity 0.2s ease, transform 0.2s ease';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>container.style.opacity = '0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>container.style.transform = 'translateY(-8px)';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>setTimeout(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// 2. Render names with 0 ticks</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>renderList(sorted, false);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// 3. Fade in</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>container.style.transition = 'opacity 0.2s ease, transform 0.2s ease';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>container.style.opacity = '1';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>container.style.transform = 'translateY(0)';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>// 4. After fade in completes, grow in HRs</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>animateHRGrowIn(sorted);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}, 220);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}, 220);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Fetch data ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>async function fetchData(year) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&amp;season=${year}&amp;hydrate=person(stats(type=season,season=${year},group=hitting))`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const res = await fetch(url);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (!res.ok) throw new Error('API error');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const data = await res.json();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return (data.roster || [])</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.filter(p =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const pos = p.position?.abbreviation || '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const name = p.person?.fullName || '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (pos === 'P' &amp;&amp; name !== 'Shohei Ohtani') return false;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>return true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>})</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.map(p =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>return { name: p.person?.fullName || 'Unknown', hr: stat?.homeRuns ?? 0 };</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Load a year (with transition) ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>async function loadYear(year, initial) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const statusEl = document.getElementById('status-msg');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const updEl<span class="Apple-converted-space">    </span>= document.getElementById('last-updated');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const data = await fetchData(year);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (data &amp;&amp; data.length &gt; 0) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>players = data;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>dataLoaded = true;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>statusEl.textContent = '';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (year === CURRENT_YEAR) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>updEl.textContent = formatTime(new Date());</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>updEl.style.display = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>updEl.textContent = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>updEl.style.display = 'none';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const sorted = sortPlayers(players, sortMode);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (initial) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>// First load — just render instantly, then grow in</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>renderList(sorted, false);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>const container = document.getElementById('player-list');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>container.style.opacity = '1';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>container.style.transform = 'translateY(0)';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>animateHRGrowIn(sorted);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>transitionToYear(sorted);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Re-enable polling only for current year</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (year === CURRENT_YEAR) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>pollTimer = setInterval(() =&gt; refreshCurrentYear(), POLL_MS);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>} catch (e) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (!dataLoaded) statusEl.textContent = 'Could not connect. Retrying…';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>async function refreshCurrentYear() {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if (selectedYear !== CURRENT_YEAR) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>try {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>const data = await fetchData(CURRENT_YEAR);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>if (data &amp;&amp; data.length &gt; 0) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>players = data;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('last-updated').textContent = formatTime(new Date());</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>renderList(sortPlayers(players, sortMode), true);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>} catch (e) {}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Sort button ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.getElementById('sort-btn').addEventListener('click', () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>sortMode = sortMode === 'most' ? 'alpha' : 'most';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>animateSort(sortPlayers(players, sortMode));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// ── Boot ──</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// Show placeholder immediately</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const container = document.getElementById('player-list');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>container.style.opacity = '0';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>players = PLACEHOLDER;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>renderList(sortPlayers(players, sortMode), true);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// Load real data with grow-in</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>loadYear(CURRENT_YEAR, true);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// Note: poll timer is started inside loadYear on success</span></p>
+<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
