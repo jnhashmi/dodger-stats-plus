@@ -242,6 +242,23 @@
       #header { padding-bottom: 2px; }
     }
   </style>
+  <style id="batter-styles">
+    #batter-stage {
+      position: absolute;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 10;
+    }
+    /* Ball */
+    #batter-ball {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0;
+    }
+  </style>
 </head>
 <body>
 <div id="app">
@@ -269,7 +286,7 @@
     <div id="player-list"></div>
     <div id="status-msg"></div>
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V12</div>
+    <div id="version">V13</div>
   </div>
 </div>
 
@@ -491,7 +508,246 @@
     });
   }
 
-  // ── Year transition: fade out → render names → grow in HRs ──
+  // ── Batter animation ──
+  function playBatterAnimation(onComplete) {
+    // Find the top player row to anchor the batter
+    const firstRow = document.querySelector('.player-row');
+    if (!firstRow) { onComplete(); return; }
+
+    const rowRect = firstRow.getBoundingClientRect();
+    const innerRect = document.getElementById('inner').getBoundingClientRect();
+
+    // Batter stands just after the name column, on the bottom rule of the first row
+    const batterX = innerRect.left + 200; // just past name column
+    const batterY = rowRect.bottom;       // feet on the rule line
+    const batterH = 52;                   // batter height in px
+    const BAT_COLOR = '#0977cc';
+    const BALL_COLOR = '#ffffff';
+
+    // ── Create stage container ──
+    const stage = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    stage.setAttribute('id', 'batter-stage');
+    stage.style.position = 'fixed';
+    stage.style.left = '0';
+    stage.style.top = '0';
+    stage.style.width = '100vw';
+    stage.style.height = '100vh';
+    stage.style.pointerEvents = 'none';
+    stage.style.overflow = 'visible';
+    stage.style.zIndex = '50';
+    document.body.appendChild(stage);
+
+    // ── SVG path helpers ──
+    const ns = 'http://www.w3.org/2000/svg';
+
+    function mkPath(d, fill, extra) {
+      const p = document.createElementNS(ns, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('fill', fill);
+      if (extra) Object.entries(extra).forEach(([k,v]) => p.setAttribute(k, v));
+      return p;
+    }
+
+    function mkCircle(cx, cy, r, fill) {
+      const c = document.createElementNS(ns, 'circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy);
+      c.setAttribute('r', r); c.setAttribute('fill', fill);
+      return c;
+    }
+
+    function mkRect(x, y, w, h, fill, rx) {
+      const r = document.createElementNS(ns, 'rect');
+      r.setAttribute('x', x); r.setAttribute('y', y);
+      r.setAttribute('width', w); r.setAttribute('height', h);
+      r.setAttribute('fill', fill);
+      if (rx) r.setAttribute('rx', rx);
+      return r;
+    }
+
+    // ── Batter group — drawn at origin, translated into position ──
+    // Scale factor: design at 100px tall, scale to batterH
+    const sc = batterH / 100;
+    const bx = batterX;
+    const by = batterY; // feet at rule line
+
+    // Batter group
+    const bGroup = document.createElementNS(ns, 'g');
+    bGroup.setAttribute('transform', `translate(${bx}, ${by}) scale(${sc})`);
+    bGroup.style.opacity = '1';
+
+    // Right-handed batter silhouette — drawn feet at y=0, top at y=-100
+    // Body parts (all in local coords, feet at 0)
+    // Helmet/head
+    bGroup.appendChild(mkCircle(2, -85, 10, BAT_COLOR));
+    // Helmet brim
+    bGroup.appendChild(mkRect(-8, -80, 14, 4, BAT_COLOR, 1));
+    // Torso
+    bGroup.appendChild(mkPath('M-8,-75 C-10,-55 -8,-45 -5,-35 L8,-35 C10,-45 10,-55 8,-75 Z', BAT_COLOR));
+    // Front arm (extended, holding bat)
+    bGroup.appendChild(mkPath('M5,-65 L22,-58 L20,-53 L3,-60 Z', BAT_COLOR));
+    // Back arm (cocked)
+    bGroup.appendChild(mkPath('M-5,-65 L-18,-55 L-16,-51 L-3,-61 Z', BAT_COLOR));
+    // Front leg
+    bGroup.appendChild(mkPath('M-3,-35 L-6,0 L0,0 L3,-35 Z', BAT_COLOR));
+    // Back leg (bent, ready stance)
+    bGroup.appendChild(mkPath('M5,-35 L14,-18 L10,0 L16,0 L20,-18 L12,-35 Z', BAT_COLOR));
+    // Bat (held upright in ready position)
+    const bat = document.createElementNS(ns, 'g');
+    bat.setAttribute('id', 'bat-g');
+    bat.appendChild(mkRect(19, -90, 4, 40, BAT_COLOR, 2));
+    bGroup.appendChild(bat);
+
+    stage.appendChild(bGroup);
+
+    // ── Ball ──
+    const ball = mkCircle(0, 0, 5, BALL_COLOR);
+    ball.style.opacity = '0';
+    stage.appendChild(ball);
+
+    // ── Loose bat (for bat flip phase) ──
+    const batFlip = document.createElementNS(ns, 'rect');
+    batFlip.setAttribute('width', 4 * sc);
+    batFlip.setAttribute('height', 40 * sc);
+    batFlip.setAttribute('fill', BAT_COLOR);
+    batFlip.setAttribute('rx', 2);
+    batFlip.style.opacity = '0';
+    batFlip.style.transformOrigin = `${2 * sc}px ${20 * sc}px`;
+    stage.appendChild(batFlip);
+
+    // ── Animation timeline ──
+    // Phase 1: Ready pose — show for 400ms
+    // Phase 2: Ball shoots from right to contact point (200ms)
+    // Phase 3: Swing — uppercut rotation (250ms)
+    // Phase 4: Ball flies off top (200ms), bat flip starts
+    // Phase 5: Batter begins trot (walk right, 600ms)
+    // Phase 6: Batter fades out (300ms)
+    // Phase 7: onComplete → bar grow-in
+
+    let startTime = null;
+    const PHASES = {
+      ready:      { start: 0,    end: 400 },
+      ballIn:     { start: 400,  end: 650 },
+      swing:      { start: 600,  end: 900 },
+      ballOut:    { start: 650,  end: 900 },
+      batFlip:    { start: 850,  end: 1400 },
+      trot:       { start: 900,  end: 1500 },
+      fade:       { start: 1400, end: 1700 },
+      done:       { start: 1700 }
+    };
+
+    // Contact point in screen coords
+    const contactX = bx + 25 * sc;
+    const contactY = by - 58 * sc;
+
+    // Ball start (far right of screen)
+    const ballStartX = window.innerWidth + 10;
+    const ballStartY = contactY + 5;
+
+    // Ball end (off top of screen)
+    const ballEndX = contactX - 30;
+    const ballEndY = -30;
+
+    // Bat flip positions
+    const batFlipStartX = bx + 22 * sc;
+    const batFlipStartY = by - 90 * sc;
+
+    let completed = false;
+
+    function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+
+    function tick(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+
+      // ── Phase: Ball shoots in ──
+      if (elapsed >= PHASES.ballIn.start && elapsed < PHASES.ballOut.start) {
+        const t = clamp01((elapsed - PHASES.ballIn.start) / (PHASES.ballIn.end - PHASES.ballIn.start));
+        const et = ease(t);
+        ball.style.opacity = '1';
+        ball.setAttribute('cx', lerp(ballStartX, contactX, et));
+        ball.setAttribute('cy', lerp(ballStartY, contactY, et));
+      }
+
+      // ── Phase: Swing ──
+      if (elapsed >= PHASES.swing.start && elapsed < PHASES.swing.end) {
+        const t = clamp01((elapsed - PHASES.swing.start) / (PHASES.swing.end - PHASES.swing.start));
+        const et = ease(t);
+        // Rotate torso/arms: uppercut swing, rotate batter group slightly
+        const swingAngle = lerp(0, -25, et); // slight upper-body lean back then through
+        bGroup.setAttribute('transform',
+          `translate(${bx}, ${by}) scale(${sc}) rotate(${swingAngle}, 0, -50)`);
+        // Bat rotates from upright to horizontal (uppercut arc)
+        const batAngle = lerp(0, -110, et);
+        bat.setAttribute('transform', `rotate(${batAngle}, 21, -70)`);
+        // Hide ball at contact
+        if (t > 0.3) ball.style.opacity = '0';
+      }
+
+      // ── Phase: Ball flies off top ──
+      if (elapsed >= PHASES.ballOut.start && elapsed < PHASES.ballOut.end) {
+        const t = clamp01((elapsed - PHASES.ballOut.start) / (PHASES.ballOut.end - PHASES.ballOut.start));
+        const et = ease(t);
+        if (elapsed < PHASES.swing.start + 150) {
+          ball.style.opacity = '1';
+          ball.setAttribute('cx', lerp(contactX, ballEndX, et));
+          ball.setAttribute('cy', lerp(contactY, ballEndY, et));
+        }
+      }
+
+      // ── Phase: Bat flip ──
+      if (elapsed >= PHASES.batFlip.start) {
+        // Show loose bat, hide held bat
+        bat.style.opacity = '0';
+        batFlip.style.opacity = '1';
+        const t = clamp01((elapsed - PHASES.batFlip.start) / (PHASES.batFlip.end - PHASES.batFlip.start));
+        const et = ease(t);
+        // Bat arcs up then comes back down
+        const flipY = elapsed < (PHASES.batFlip.start + PHASES.batFlip.end) / 2
+          ? lerp(batFlipStartY, batFlipStartY - 80, clamp01(t * 2))
+          : lerp(batFlipStartY - 80, batFlipStartY + 60, clamp01((t - 0.5) * 2));
+        const flipX = lerp(batFlipStartX, batFlipStartX + 20, et);
+        const flipRot = lerp(0, 540, et);
+        batFlip.setAttribute('x', flipX);
+        batFlip.setAttribute('y', flipY);
+        batFlip.style.transform = `rotate(${flipRot}deg)`;
+        batFlip.style.transformOrigin = `${flipX + 2*sc}px ${flipY + 20*sc}px`;
+        // Fade bat out at end
+        if (t > 0.85) batFlip.style.opacity = String(1 - (t - 0.85) / 0.15);
+      }
+
+      // ── Phase: Trot ──
+      if (elapsed >= PHASES.trot.start && elapsed < PHASES.fade.end) {
+        const t = clamp01((elapsed - PHASES.trot.start) / (PHASES.trot.end - PHASES.trot.start));
+        const trotX = lerp(0, 60, ease(t));
+        // Restore upright pose
+        bGroup.setAttribute('transform',
+          `translate(${bx + trotX}, ${by}) scale(${sc})`);
+        bat.style.opacity = '0';
+      }
+
+      // ── Phase: Fade out ──
+      if (elapsed >= PHASES.fade.start) {
+        const t = clamp01((elapsed - PHASES.fade.start) / (PHASES.fade.end - PHASES.fade.start));
+        bGroup.style.opacity = String(1 - t);
+      }
+
+      // ── Done ──
+      if (elapsed >= PHASES.done.start && !completed) {
+        completed = true;
+        stage.remove();
+        onComplete();
+        return;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  // ── Year transition: fade out → render names → batter animation → grow in HRs ──
   function transitionToYear(sorted) {
     const container = document.getElementById('player-list');
 
@@ -509,9 +765,11 @@
       container.style.opacity = '1';
       container.style.transform = 'translateY(0)';
 
-      // 4. After fade in completes, grow in HRs
+      // 4. After fade in, play batter animation, then grow in HRs
       setTimeout(() => {
-        animateHRGrowIn(sorted);
+        playBatterAnimation(() => {
+          animateHRGrowIn(sorted);
+        });
       }, 220);
 
     }, 220);
