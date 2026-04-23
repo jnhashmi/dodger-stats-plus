@@ -270,7 +270,7 @@
     <div id="player-list"></div>
     <div id="status-msg"></div>
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V15</div>
+    <div id="version">V16</div>
   </div>
 </div>
 
@@ -508,9 +508,9 @@
     const FRAME_H = 307;   // px per frame in source
 
     // Scale batter to row height with a bit of overflow above
-    // Display at 100% of provided size
-    const displayH = FRAME_H;  // 307px — full size
-    const displayW = FRAME_W;  // 690px — full size
+    // Display at 96px tall (20% larger than previous 80px)
+    const displayH = 96;
+    const displayW = Math.round(FRAME_W * (displayH / FRAME_H));
 
     // Position: left edge at start of tick area, feet on rule line + 19px down
     const leftX = innerRect.left + nameWidth + 14;
