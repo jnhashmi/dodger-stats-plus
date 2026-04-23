@@ -270,7 +270,7 @@
     <div id="player-list"></div>
     <div id="status-msg"></div>
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V14</div>
+    <div id="version">V15</div>
   </div>
 </div>
 
@@ -508,15 +508,13 @@
     const FRAME_H = 307;   // px per frame in source
 
     // Scale batter to row height with a bit of overflow above
-    // Row is 40px, but batter should be taller — use ~80px display height
-    // so he's visible and breaks above the row naturally
-    const displayH = 80;
-    const displayW = Math.round(FRAME_W * (displayH / FRAME_H));
-    const scale = displayH / FRAME_H;
+    // Display at 100% of provided size
+    const displayH = FRAME_H;  // 307px — full size
+    const displayW = FRAME_W;  // 690px — full size
 
-    // Position: left edge at start of tick area, feet on rule line
-    const leftX = innerRect.left + nameWidth + 14; // 14 = gap
-    const bottomY = rowRect.bottom; // feet on rule
+    // Position: left edge at start of tick area, feet on rule line + 19px down
+    const leftX = innerRect.left + nameWidth + 14;
+    const bottomY = rowRect.bottom + 19;
 
     // Create canvas element for sprite playback
     const canvas = document.createElement('canvas');
@@ -534,16 +532,16 @@
     const img = new Image();
     img.src = 'spritesheet.png';
 
-    // Playback: ~24fps feels smooth for this kind of animation
-    const FPS = 24;
+    // Playback: 18fps — slightly slower, more natural feel
+    const FPS = 18;
     const FRAME_DURATION = 1000 / FPS;
     let currentFrame = 0;
     let lastFrameTime = 0;
     let startTime = null;
     let completed = false;
 
-    // Fade out starts on last 8 frames
-    const FADE_START_FRAME = USE_FRAMES - 8;
+    // No fade — batter's last frames already fade in the sprite
+    const FADE_START_FRAME = USE_FRAMES; // disabled
 
     img.onload = () => {
       function tick(ts) {
