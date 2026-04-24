@@ -305,7 +305,7 @@
     <div id="player-list"></div>
     <div id="status-msg"></div>
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V30</div>
+    <div id="version">V31</div>
   </div>
 </div>
 
@@ -550,7 +550,7 @@
     // Get tick area left edge from DOM, offset 75px right to sit under "Run"
     const tickArea = firstRow.querySelector('.tick-area');
     const tickRect = tickArea.getBoundingClientRect();
-    const leftX = Math.round(tickRect.left + 75);
+    const leftX = Math.round(tickRect.left + 55);
     const bottomY = Math.round(rowRect.bottom + 19 - 34 + 17 + 3 + 2);
 
     // Scale canvas for Retina/high-DPI displays
