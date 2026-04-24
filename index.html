@@ -71,7 +71,7 @@
       display: none;
       vertical-align: baseline;
       position: relative;
-      top: 4px;
+      top: 3px;
     }
 
 
@@ -251,7 +251,7 @@
       font-family: 'Bricolage Grotesque', sans-serif;
       white-space: nowrap;
       display: none;
-      margin-left: 13px;
+      margin-left: 11px;
     }
 
     @media (orientation: landscape) {
@@ -305,7 +305,7 @@
     <div id="player-list"></div>
     <div id="status-msg"></div>
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V26</div>
+    <div id="version">V27</div>
   </div>
 </div>
 
@@ -554,8 +554,8 @@
     const gapWidth = 14;
 
     // Position: left edge at start of tick area, feet on rule line
-    const leftX = innerRect.left + nameColWidth + gapWidth;
-    const bottomY = rowRect.bottom + 19 - 34 + 17 + 3 + 2; // net: -10 from rule
+    const leftX = Math.round(innerRect.left + nameColWidth + gapWidth);
+    const bottomY = Math.round(rowRect.bottom + 19 - 34 + 17 + 3 + 2);
 
     // Create canvas element for sprite playback
     const canvas = document.createElement('canvas');
@@ -566,10 +566,11 @@
     canvas.style.top = (bottomY - displayH) + 'px';
     canvas.style.pointerEvents = 'none';
     canvas.style.zIndex = '50';
-    canvas.style.imageRendering = 'auto';
+    canvas.style.imageRendering = 'pixelated'; // prevent sub-pixel interpolation
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
     const img = new Image();
     img.src = 'spritesheet.png';
 
