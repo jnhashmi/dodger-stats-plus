@@ -37,7 +37,7 @@
       flex-direction: column;
     }
 
-    /* Sticky header bar */
+    /* ── Sticky header bar ── */
     #header-bar {
       position: sticky;
       top: 0;
@@ -49,7 +49,6 @@
       padding-bottom: 12px;
     }
 
-    /* Scrollable content area */
     #inner {
       padding-left: max(env(safe-area-inset-left), 24px);
       padding-right: max(env(safe-area-inset-right), 24px);
@@ -88,7 +87,25 @@
       top: 3px;
     }
 
+    #home-runs-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      white-space: nowrap;
+      display: none;
+      margin-left: 11px;
+    }
 
+    #ws-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      white-space: nowrap;
+      display: none;
+      margin-left: 11px;
+    }
 
     #year-btn {
       font-size: 18px;
@@ -103,7 +120,33 @@
       transition: border-color 0.15s;
       line-height: 1.4;
     }
-    #year-btn:active { border-color: #888; }
+    #year-btn:active { border-color: #aaa; }
+
+    /* WS tally */
+    #ws-tally {
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      white-space: nowrap;
+      display: none;
+    }
+
+    /* WS clear button */
+    #ws-clear-btn {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      color: #fff;
+      background: none;
+      border: 0.5px solid #6e6e6e;
+      border-radius: 4px;
+      padding: 2px 12px;
+      cursor: pointer;
+      display: none;
+      line-height: 1.4;
+    }
+    #ws-clear-btn:active { opacity: 0.6; }
 
     #header-right {
       display: flex;
@@ -118,17 +161,19 @@
       white-space: nowrap;
     }
 
-    #sort-btn {
+    /* Home plate nav button — flush to right edge */
+    #home-btn {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 2px;
+      padding: 0;
+      margin-right: -4px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: opacity 0.15s;
     }
-    #sort-btn:active { opacity: 0.5; }
+    #home-btn:active { opacity: 0.5; }
 
     /* ── Year dropdown overlay ── */
     #year-overlay {
@@ -145,16 +190,17 @@
       background: #0a0a0a;
       border: 0.5px solid #6e6e6e;
       border-radius: 6px;
-      overflow-y: scroll;
-      -webkit-overflow-scrolling: touch;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
       max-height: 70vh;
-      width: 80px;
+      width: 120px;
     }
 
     .year-option {
       display: block;
       width: 100%;
-      padding: 10px 8px;
+      padding: 10px 8px 10px 32px;
       font-size: 18px;
       font-weight: 700;
       font-family: 'Bricolage Grotesque', sans-serif;
@@ -170,19 +216,15 @@
     .year-option:active { background: #1a1a1a; }
     .year-option.active { color: #0977cc; }
 
-    /* ── Player list ── */
+    /* ── Screens ── */
+    #hr-screen { display: block; }
+    #ws-screen { display: none; }
+
+    /* ── HR Player list ── */
     #player-list {
       width: 100%;
       margin-top: 1.5em;
       transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-    #player-list.fade-out {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    #player-list.fade-in {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .player-row {
@@ -204,6 +246,7 @@
       font-family: 'Bricolage Grotesque', sans-serif;
       letter-spacing: -0.1px;
       flex-shrink: 0;
+      cursor: pointer;
     }
 
     .tick-area {
@@ -230,6 +273,41 @@
       flex-shrink: 0;
     }
 
+    /* ── World Series list ── */
+    #ws-list {
+      width: 100%;
+      margin-top: 1.5em;
+    }
+
+    .ws-row {
+      display: flex;
+      align-items: center;
+      border-bottom: 0.5px solid #6e6e6e;
+      height: 40px;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .ws-year {
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      width: 60px;
+      min-width: 60px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .ws-team {
+      font-size: 18px;
+      font-weight: 400;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .ws-team.revealed { opacity: 1; }
+
+    /* ── Misc ── */
     #status-msg {
       font-family: 'Bricolage Grotesque', sans-serif;
       color: #444;
@@ -242,7 +320,7 @@
       display: none;
       font-family: 'Bricolage Grotesque', sans-serif;
       color: #6e6e6e;
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-align: center;
@@ -259,16 +337,6 @@
       margin-top: 8px;
     }
 
-    #home-runs-label {
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
-      font-family: 'Bricolage Grotesque', sans-serif;
-      white-space: nowrap;
-      display: none;
-      margin-left: 11px;
-    }
-
     @media (orientation: landscape) {
       #title-text { display: none; }
       #dodger-logo { display: inline-block; }
@@ -279,17 +347,34 @@
       #title-text { display: inline; }
       #dodger-logo { display: none; }
       #home-runs-label { display: none; }
+      #ws-label { margin-left: 0; }
       #title { font-size: 15px; }
-      #year-btn { font-size: 15px; padding: 4px 8px; }
+      #year-btn { font-size: 15px; padding: 6px 8px; }
       .player-name { font-size: 15px; width: 130px; min-width: 130px; }
       .hr-count { font-size: 15px; min-width: 24px; }
-      #portrait-note { display: block; font-size: 13px; }
+      .ws-year { font-size: 15px; }
+      .ws-team { font-size: 15px; }
+      #ws-tally { font-size: 15px; }
+      #ws-clear-btn { font-size: 15px; }
+      #portrait-note { display: block; }
       .year-option { font-size: 15px; }
       #header { padding-bottom: 2px; }
       #header-bar { padding-bottom: 10px; }
+      #home-runs-label { display: none !important; }
     }
-  </style>
 
+    /* WS screen — hide year btn, show ws elements */
+    body.ws-mode #year-btn { display: none; }
+    body.ws-mode #last-updated { display: none; }
+    body.ws-mode #ws-tally { display: block; }
+    body.ws-mode #ws-clear-btn { display: block; }
+    body.ws-mode #ws-label { display: inline-block; }
+    body.ws-mode #home-runs-label { display: none !important; }
+    body.ws-mode #title-text { display: none !important; }
+    body.ws-mode #dodger-logo { display: inline-block; }
+    body.ws-mode #hr-screen { display: none; }
+    body.ws-mode #ws-screen { display: block; }
+  </style>
 </head>
 <body>
 <div id="app">
@@ -301,18 +386,17 @@
           <span id="title-text">Dodger Home Runs</span>
         </div>
         <span id="home-runs-label">Home Runs</span>
+        <span id="ws-label">World Series Winners</span>
         <button id="year-btn">2026</button>
+        <span id="ws-tally">Total 0/57</span>
+        <button id="ws-clear-btn">Clear</button>
       </div>
       <div id="header-right">
         <span id="last-updated"></span>
-        <button id="sort-btn" title="Toggle sort" aria-label="Toggle sort order">
-          <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8.5" cy="5.5" r="2.5" stroke="#ffffff" stroke-width="1.6"/>
-            <line x1="2" y1="5.5" x2="6" y2="5.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
-            <line x1="11" y1="5.5" x2="26" y2="5.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
-            <circle cx="19.5" cy="16.5" r="2.5" stroke="#ffffff" stroke-width="1.6"/>
-            <line x1="2" y1="16.5" x2="17" y2="16.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
-            <line x1="22" y1="16.5" x2="26" y2="16.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/>
+        <button id="home-btn" title="Navigate" aria-label="Navigate">
+          <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Home plate: flat top, sharp point at bottom -->
+            <path d="M2 3 L20 3 L20 14 L11 24 L2 14 Z" stroke="#ffffff" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
           </svg>
         </button>
       </div>
@@ -320,10 +404,19 @@
   </div>
 
   <div id="inner">
-    <div id="player-list"></div>
-    <div id="status-msg"></div>
+    <!-- HR Screen -->
+    <div id="hr-screen">
+      <div id="player-list"></div>
+      <div id="status-msg"></div>
+    </div>
+
+    <!-- World Series Screen -->
+    <div id="ws-screen">
+      <div id="ws-list"></div>
+    </div>
+
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V33</div>
+    <div id="version">V37</div>
   </div>
 </div>
 
@@ -336,15 +429,13 @@
   const TEAM_ID = 119;
 
   // ── Auto year logic ──
-  // Before March 20 of current calendar year → show previous year
-  // On/after March 20 → show current year
   const now = new Date();
   const calYear = now.getFullYear();
-  const openingDay = new Date(calYear, 2, 20); // March 20 (month is 0-indexed)
+  const openingDay = new Date(calYear, 2, 20);
   const CURRENT_YEAR = now >= openingDay ? calYear : calYear - 1;
 
   const YEARS = [];
-  for (let y = CURRENT_YEAR; y >= 2013; y--) YEARS.push(y);
+  for (let y = CURRENT_YEAR; y >= 1969; y--) YEARS.push(y);
 
   const POLL_MS = 60000;
   const MAX_TICKS = 62;
@@ -352,29 +443,84 @@
   const ROW_H = 40;
   const BAR_PADDING = 3;
 
-  const PLACEHOLDER = [
-    { name: 'Shohei Ohtani',       hr: 8 },
-    { name: 'Freddie Freeman',     hr: 5 },
-    { name: 'Teoscar Hernández',   hr: 4 },
-    { name: 'Will Smith',          hr: 3 },
-    { name: 'Max Muncy',           hr: 3 },
-    { name: 'Dalton Rushing',      hr: 2 },
-    { name: 'Andy Pages',          hr: 2 },
-    { name: 'Hyeseong Kim',        hr: 1 },
-    { name: 'Miguel Rojas',        hr: 1 },
-    { name: 'Alex Call',           hr: 0 },
-    { name: 'Santiago Espinal',    hr: 0 },
-    { name: 'Kyle Tucker',         hr: 0 },
-    { name: 'Michael Conforto',    hr: 0 },
-    { name: 'Tommy Edman',         hr: 0 },
-  ];
+  // ── World Series data 1969–2025 ──
+  // 1994: no World Series (strike)
+  const WS_WINNERS = {
+    1969: { team: 'New York Mets',         color: '#002D72' },
+    1970: { team: 'Baltimore Orioles',      color: '#DF4601' },
+    1971: { team: 'Pittsburgh Pirates',     color: '#FDB827' },
+    1972: { team: 'Oakland Athletics',      color: '#003831' },
+    1973: { team: 'Oakland Athletics',      color: '#003831' },
+    1974: { team: 'Oakland Athletics',      color: '#003831' },
+    1975: { team: 'Cincinnati Reds',        color: '#C6011F' },
+    1976: { team: 'Cincinnati Reds',        color: '#C6011F' },
+    1977: { team: 'New York Yankees',       color: '#003087' },
+    1978: { team: 'New York Yankees',       color: '#003087' },
+    1979: { team: 'Pittsburgh Pirates',     color: '#FDB827' },
+    1980: { team: 'Philadelphia Phillies',  color: '#E81828' },
+    1981: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
+    1982: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
+    1983: { team: 'Baltimore Orioles',      color: '#DF4601' },
+    1984: { team: 'Detroit Tigers',         color: '#0C2340' },
+    1985: { team: 'Kansas City Royals',     color: '#004687' },
+    1986: { team: 'New York Mets',          color: '#002D72' },
+    1987: { team: 'Minnesota Twins',        color: '#002B5C' },
+    1988: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
+    1989: { team: 'Oakland Athletics',      color: '#003831' },
+    1990: { team: 'Cincinnati Reds',        color: '#C6011F' },
+    1991: { team: 'Minnesota Twins',        color: '#002B5C' },
+    1992: { team: 'Toronto Blue Jays',      color: '#134A8E' },
+    1993: { team: 'Toronto Blue Jays',      color: '#134A8E' },
+    1994: null, // no World Series
+    1995: { team: 'Atlanta Braves',         color: '#CE1141' },
+    1996: { team: 'New York Yankees',       color: '#003087' },
+    1997: { team: 'Florida Marlins',        color: '#0077C8' },
+    1998: { team: 'New York Yankees',       color: '#003087' },
+    1999: { team: 'New York Yankees',       color: '#003087' },
+    2000: { team: 'New York Yankees',       color: '#003087' },
+    2001: { team: 'Arizona Diamondbacks',   color: '#A71930' },
+    2002: { team: 'Anaheim Angels',         color: '#BA0021' },
+    2003: { team: 'Florida Marlins',        color: '#0077C8' },
+    2004: { team: 'Boston Red Sox',         color: '#BD3039' },
+    2005: { team: 'Chicago White Sox',      color: '#27251F' },
+    2006: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
+    2007: { team: 'Boston Red Sox',         color: '#BD3039' },
+    2008: { team: 'Philadelphia Phillies',  color: '#E81828' },
+    2009: { team: 'New York Yankees',       color: '#003087' },
+    2010: { team: 'San Francisco Giants',   color: '#FD5A1E' },
+    2011: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
+    2012: { team: 'San Francisco Giants',   color: '#FD5A1E' },
+    2013: { team: 'Boston Red Sox',         color: '#BD3039' },
+    2014: { team: 'San Francisco Giants',   color: '#FD5A1E' },
+    2015: { team: 'Kansas City Royals',     color: '#004687' },
+    2016: { team: 'Chicago Cubs',           color: '#0E3386' },
+    2017: { team: 'Houston Astros',         color: '#EB6E1F' },
+    2018: { team: 'Boston Red Sox',         color: '#BD3039' },
+    2019: { team: 'Washington Nationals',   color: '#AB0003' },
+    2020: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
+    2021: { team: 'Atlanta Braves',         color: '#CE1141' },
+    2022: { team: 'Houston Astros',         color: '#EB6E1F' },
+    2023: { team: 'Texas Rangers',          color: '#003278' },
+    2024: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
+    2025: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
+  };
 
+  // Count total WS years (exclude 1994)
+  const WS_YEARS = Object.keys(WS_WINNERS).map(Number).sort((a,b) => a - b);
+  const WS_TOTAL = WS_YEARS.filter(y => WS_WINNERS[y] !== null).length;
+
+  // Revealed state
+  let wsRevealed = {};
+  let wsRevealedCount = 0;
+
+  // HR state
   let sortMode = 'most';
   let players = [];
   let animating = false;
   let dataLoaded = false;
   let selectedYear = CURRENT_YEAR;
   let pollTimer = null;
+  let currentScreen = 'hr'; // 'hr' or 'ws'
 
   // ── Build year dropdown ──
   const dropdown = document.getElementById('year-dropdown');
@@ -390,9 +536,9 @@
   document.getElementById('year-btn').addEventListener('click', () => {
     const btn = document.getElementById('year-btn');
     const rect = btn.getBoundingClientRect();
-    const dropdown = document.getElementById('year-dropdown');
-    dropdown.style.left = rect.left + 'px';
-    dropdown.style.top = (rect.bottom + 4) + 'px';
+    const dd = document.getElementById('year-dropdown');
+    dd.style.left = (rect.left - 20) + 'px';
+    dd.style.top = (rect.bottom + 4) + 'px';
     document.getElementById('year-overlay').classList.add('open');
   });
 
@@ -410,14 +556,101 @@
     document.querySelectorAll('.year-option').forEach(b => {
       b.classList.toggle('active', parseInt(b.dataset.year) === y);
     });
-    // Stop live polling if not current year
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     document.getElementById('last-updated').textContent = '';
     document.getElementById('last-updated').style.display = 'none';
     loadYear(y);
   }
 
-  // ── Utilities ──
+  // ── Home plate nav ──
+  document.getElementById('home-btn').addEventListener('click', () => {
+    if (currentScreen === 'hr') {
+      currentScreen = 'ws';
+      document.body.classList.add('ws-mode');
+      // Show WS label in landscape
+      if (window.innerWidth > window.innerHeight) {
+        document.getElementById('ws-label').style.display = 'inline-block';
+      } else {
+        document.getElementById('title-text').textContent = 'World Series Winners';
+        document.getElementById('title-text').style.display = 'inline';
+      }
+      buildWSList();
+    } else {
+      currentScreen = 'hr';
+      document.body.classList.remove('ws-mode');
+      // Restore title
+      document.getElementById('title-text').textContent = 'Dodger Home Runs';
+      document.getElementById('ws-label').style.display = '';
+      document.getElementById('last-updated').style.display = '';
+    }
+  });
+
+  // ── WS Clear button ──
+  document.getElementById('ws-clear-btn').addEventListener('click', () => {
+    wsRevealed = {};
+    wsRevealedCount = 0;
+    updateWSTally();
+    document.querySelectorAll('.ws-team').forEach(el => {
+      el.classList.remove('revealed');
+      el.textContent = '';
+    });
+  });
+
+  function updateWSTally() {
+    document.getElementById('ws-tally').textContent = `Total ${wsRevealedCount}/${WS_TOTAL}`;
+  }
+
+  // ── Build WS list ──
+  function buildWSList() {
+    const list = document.getElementById('ws-list');
+    list.innerHTML = '';
+    WS_YEARS.forEach(year => {
+      const data = WS_WINNERS[year];
+      const row = document.createElement('div');
+      row.className = 'ws-row';
+      row.dataset.year = year;
+
+      const yearEl = document.createElement('div');
+      yearEl.className = 'ws-year';
+      yearEl.textContent = year;
+
+      const teamEl = document.createElement('div');
+      teamEl.className = 'ws-team';
+      if (data === null) {
+        // 1994 — no WS
+        teamEl.style.color = '#444';
+        teamEl.textContent = 'No World Series';
+        teamEl.classList.add('revealed');
+      } else {
+        teamEl.style.color = data.color;
+        if (wsRevealed[year]) {
+          teamEl.textContent = data.team;
+          teamEl.classList.add('revealed');
+        }
+      }
+
+      row.appendChild(yearEl);
+      row.appendChild(teamEl);
+
+      if (data !== null && !wsRevealed[year]) {
+        row.addEventListener('click', () => revealWS(year, teamEl, data));
+      }
+
+      list.appendChild(row);
+    });
+    updateWSTally();
+  }
+
+  function revealWS(year, teamEl, data) {
+    if (wsRevealed[year]) return;
+    wsRevealed[year] = true;
+    wsRevealedCount++;
+    teamEl.textContent = data.team;
+    teamEl.classList.add('revealed');
+    updateWSTally();
+  }
+
+  // ── HR utilities ──
   function formatTime(d) {
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
@@ -432,9 +665,7 @@
     return copy;
   }
 
-  // ── SVG tick builder (draws N filled ticks out of MAX_TICKS slots) ──
   function buildTickSVG(hr, displayHr) {
-    // hr = actual count, displayHr = how many to visually show (for animation)
     const d = displayHr !== undefined ? displayHr : hr;
     const slots = Math.max(MAX_TICKS, hr);
     const barH = ROW_H - BAR_PADDING * 2;
@@ -443,13 +674,13 @@
     const viewW = slots * slotW;
     const gapFrac = 0.18;
     const barW = slotW * (1 - gapFrac);
-
+    const SHEET_W = 40706;
+    const TOTAL_FRAMES = 59;
     const svgNS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(svgNS, 'svg');
     svg.setAttribute('viewBox', `0 0 ${viewW} ${ROW_H}`);
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.style.width = hr > MAX_TICKS ? `${(hr / MAX_TICKS) * 100}%` : '100%';
-
     for (let i = 0; i < d; i++) {
       const rect = document.createElementNS(svgNS, 'rect');
       rect.setAttribute('x', i * slotW + slotW * (gapFrac / 2));
@@ -462,7 +693,6 @@
     return svg;
   }
 
-  // ── Render list (names + 0 ticks initially for grow-in, or full for instant) ──
   function renderList(sorted, instant) {
     const container = document.getElementById('player-list');
     container.innerHTML = '';
@@ -471,19 +701,15 @@
       row.className = 'player-row';
       row.dataset.name = p.name;
       row.dataset.hr = p.hr;
-
       const nameEl = document.createElement('div');
       nameEl.className = 'player-name';
       nameEl.textContent = p.name;
-
       const tickArea = document.createElement('div');
       tickArea.className = 'tick-area';
       tickArea.appendChild(buildTickSVG(p.hr, instant ? p.hr : 0));
-
       const countEl = document.createElement('div');
       countEl.className = 'hr-count';
       countEl.textContent = instant ? p.hr : 0;
-
       row.appendChild(nameEl);
       row.appendChild(tickArea);
       row.appendChild(countEl);
@@ -491,19 +717,26 @@
     });
   }
 
-  // ── HR grow-in animation ──
-  // Increments displayed HR count one tick at a time across all rows simultaneously
+  // ── Tap name column to toggle sort ──
+  document.getElementById('player-list').addEventListener('click', (e) => {
+    if (animating) return;
+    const row = e.target.closest('.player-row');
+    if (!row) return;
+    const nameEl = row.querySelector('.player-name');
+    if (!nameEl) return;
+    const nameRect = nameEl.getBoundingClientRect();
+    if (e.clientX > nameRect.right) return; // only respond to taps in name column
+    sortMode = sortMode === 'most' ? 'alpha' : 'most';
+    animateSort(sortPlayers(players, sortMode));
+  });
+
   function animateHRGrowIn(sorted) {
     const maxHR = Math.max(...sorted.map(p => p.hr), 0);
     if (maxHR === 0) return;
-
     const rows = document.querySelectorAll('.player-row');
     const rowMap = {};
     rows.forEach(r => { rowMap[r.dataset.name] = r; });
-
     let tick = 0;
-    const TICK_SPEED = 40; // ms per tick — fast progress bar feel
-
     const timer = setInterval(() => {
       tick++;
       sorted.forEach(p => {
@@ -517,22 +750,18 @@
         countEl.textContent = show;
       });
       if (tick >= maxHR) clearInterval(timer);
-    }, TICK_SPEED);
+    }, 40);
   }
 
-  // ── Sort animation (FLIP) ──
   function animateSort(newSorted) {
     if (animating) return;
     animating = true;
-
     const container = document.getElementById('player-list');
     const oldPos = {};
     container.querySelectorAll('.player-row').forEach(r => {
       oldPos[r.dataset.name] = r.getBoundingClientRect().top;
     });
-
-    renderList(newSorted, true); // instant, no grow-in on sort
-
+    renderList(newSorted, true);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         container.querySelectorAll('.player-row').forEach(r => {
@@ -557,33 +786,20 @@
   function playBatterAnimation(onComplete) {
     const firstRow = document.querySelector('.player-row');
     if (!firstRow) { onComplete(); return; }
-
     const rowRect = firstRow.getBoundingClientRect();
-    const innerRect = document.getElementById('inner').getBoundingClientRect();
-
-    // Sprite constants
     const TOTAL_FRAMES = 59;
     const USE_FRAMES = 58;
-    const SHEET_W = 40706; // exact total sprite sheet width
-    const FRAME_W_PRECISE = SHEET_W / TOTAL_FRAMES; // 689.9322...px exact
-    const FRAME_W = Math.round(FRAME_W_PRECISE); // 690 for display
-    const FRAME_H = 307;   // px per frame in source
-
-    // 102px display height maps source 307px cleanly to 3x Retina (307/3 ≈ 102)
+    const FRAME_W_PRECISE = 40706 / TOTAL_FRAMES;
+    const FRAME_W = Math.round(FRAME_W_PRECISE);
+    const FRAME_H = 307;
     const displayH = 102;
     const displayW = Math.round(FRAME_W * (displayH / FRAME_H));
-
-    // Get tick area left edge from DOM, offset 75px right to sit under "Run"
     const tickArea = firstRow.querySelector('.tick-area');
     const tickRect = tickArea.getBoundingClientRect();
     const isPortrait = window.innerHeight > window.innerWidth;
     const leftX = Math.round(tickRect.left + (isPortrait ? 15 : 55));
-    const bottomY = Math.round(rowRect.bottom + 19 - 34 + 17 + 3 + 2);
-
-    // Scale canvas for Retina/high-DPI displays
+    const bottomY = Math.round(rowRect.bottom + 7);
     const dpr = window.devicePixelRatio || 1;
-
-    // Create canvas element for sprite playback
     const canvas = document.createElement('canvas');
     canvas.width = displayW * dpr;
     canvas.height = displayH * dpr;
@@ -596,55 +812,27 @@
     canvas.style.zIndex = '50';
     canvas.style.imageRendering = 'auto';
     document.body.appendChild(canvas);
-
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     const img = new Image();
     img.src = 'spritesheet.png';
-
-    // Playback: 18fps — slightly slower, more natural feel
     const FPS = 18;
     const FRAME_DURATION = 1000 / FPS;
     let currentFrame = 0;
     let lastFrameTime = 0;
-    let startTime = null;
     let completed = false;
-
-    // No fade — batter's last frames already fade in the sprite
-    const FADE_START_FRAME = USE_FRAMES; // disabled
-
     img.onload = () => {
       function tick(ts) {
-        if (!startTime) startTime = ts;
         if (completed) return;
-
+        if (!lastFrameTime) lastFrameTime = ts;
         if (ts - lastFrameTime >= FRAME_DURATION) {
           lastFrameTime = ts;
-
-          // Clear and draw current frame
           ctx.clearRect(0, 0, displayW, displayH);
-
-          // Apply fade on last frames
-          if (currentFrame >= FADE_START_FRAME) {
-            const fadeT = (currentFrame - FADE_START_FRAME) / (USE_FRAMES - FADE_START_FRAME);
-            ctx.globalAlpha = Math.max(0, 1 - fadeT);
-          } else {
-            ctx.globalAlpha = 1;
-          }
-
-          // Draw the current frame from sprite sheet using precise width to prevent drift
-          ctx.drawImage(
-            img,
-            currentFrame * FRAME_W_PRECISE, 0,  // source x (precise, no drift)
-            FRAME_W_PRECISE, FRAME_H,            // source w, h
-            0, 0,                                // dest x, y
-            displayW, displayH                   // dest w, h
-          );
-
+          ctx.globalAlpha = 1;
+          ctx.drawImage(img, currentFrame * FRAME_W_PRECISE, 0, FRAME_W_PRECISE, FRAME_H, 0, 0, displayW, displayH);
           currentFrame++;
-
           if (currentFrame >= USE_FRAMES) {
             completed = true;
             canvas.remove();
@@ -652,79 +840,64 @@
             return;
           }
         }
-
         requestAnimationFrame(tick);
       }
-
       requestAnimationFrame(tick);
     };
-
-    img.onerror = () => {
-      // If sprite fails to load, skip animation gracefully
-      canvas.remove();
-      onComplete();
-    };
+    img.onerror = () => { canvas.remove(); onComplete(); };
   }
 
-  // ── Year transition: fade out → render names → batter animation → grow in HRs ──
   function transitionToYear(sorted) {
     const container = document.getElementById('player-list');
-
-    // 1. Fade out + slide up
     container.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
     container.style.opacity = '0';
     container.style.transform = 'translateY(-8px)';
-
+    // Instant scroll to top while list is faded out — invisible to user
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     setTimeout(() => {
-      // 2. Render names with 0 ticks
       renderList(sorted, false);
-
-      // 3. Fade in
       container.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
       container.style.opacity = '1';
       container.style.transform = 'translateY(0)';
-
-      // 4. After fade in, play batter animation, then grow in HRs
       setTimeout(() => {
-        playBatterAnimation(() => {
-          animateHRGrowIn(sorted);
-        });
+        playBatterAnimation(() => { animateHRGrowIn(sorted); });
       }, 220);
-
     }, 220);
   }
 
-  // ── Fetch data ──
   async function fetchData(year) {
     const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
     return (data.roster || [])
-      .filter(p => {
-        const pos = p.position?.abbreviation || '';
-        const name = p.person?.fullName || '';
-        if (pos === 'P' && name !== 'Shohei Ohtani') return false;
-        return true;
-      })
       .map(p => {
         const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
-        return { name: p.person?.fullName || 'Unknown', hr: stat?.homeRuns ?? 0 };
-      });
+        return {
+          name: p.person?.fullName || 'Unknown',
+          hr: stat?.homeRuns ?? 0,
+          pos: p.position?.abbreviation || ''
+        };
+      })
+      .filter(p => {
+        if (p.name === 'Shohei Ohtani') return true; // always include
+        if (p.pos === 'P') return p.hr >= 1; // pitchers only if they homered
+        return true; // all position players
+      })
+      .map(({ name, hr }) => ({ name, hr }));
   }
 
-  // ── Load a year (with transition) ──
   async function loadYear(year, initial) {
     const statusEl = document.getElementById('status-msg');
-    const updEl    = document.getElementById('last-updated');
-
+    const updEl = document.getElementById('last-updated');
     try {
       const data = await fetchData(year);
       if (data && data.length > 0) {
         players = data;
         dataLoaded = true;
         statusEl.textContent = '';
-
         if (year === CURRENT_YEAR) {
           updEl.textContent = formatTime(new Date());
           updEl.style.display = '';
@@ -732,11 +905,8 @@
           updEl.textContent = '';
           updEl.style.display = 'none';
         }
-
         const sorted = sortPlayers(players, sortMode);
-
         if (initial) {
-          // First load — just render instantly, then grow in
           renderList(sorted, false);
           const container = document.getElementById('player-list');
           container.style.opacity = '1';
@@ -745,8 +915,6 @@
         } else {
           transitionToYear(sorted);
         }
-
-        // Re-enable polling only for current year
         if (year === CURRENT_YEAR) {
           pollTimer = setInterval(() => refreshCurrentYear(), POLL_MS);
         }
@@ -768,25 +936,11 @@
     } catch (e) {}
   }
 
-  // ── Sort button ──
-  document.getElementById('sort-btn').addEventListener('click', () => {
-    sortMode = sortMode === 'most' ? 'alpha' : 'most';
-    animateSort(sortPlayers(players, sortMode));
-  });
-
   // ── Boot ──
-  // Set year button to dynamic current year
   document.getElementById('year-btn').textContent = CURRENT_YEAR;
-
-  // Show placeholder immediately
   const container = document.getElementById('player-list');
   container.style.opacity = '0';
-  players = PLACEHOLDER;
-  renderList(sortPlayers(players, sortMode), true);
-
-  // Load real data with grow-in
   loadYear(CURRENT_YEAR, true);
-  // Note: poll timer is started inside loadYear on success
 </script>
 </body>
 </html>
