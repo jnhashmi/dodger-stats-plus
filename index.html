@@ -346,9 +346,9 @@
 
     @media (orientation: portrait) {
       #title-text { display: inline; }
-      #dodger-logo { display: none; }
-      #home-runs-label { display: none; }
-      #ws-label { margin-left: 0; }
+      #dodger-logo { display: none !important; }
+      #home-runs-label { display: none !important; }
+      #ws-label { margin-left: 0; font-size: 15px; }
       #title { font-size: 15px; }
       #year-btn { font-size: 15px; padding: 6px 8px; }
       .player-name { font-size: 15px; width: 130px; min-width: 130px; }
@@ -361,7 +361,6 @@
       .year-option { font-size: 15px; }
       #header { padding-bottom: 2px; }
       #header-bar { padding-bottom: 10px; }
-      #home-runs-label { display: none !important; }
     }
 
     /* WS screen — hide year btn, show ws elements */
@@ -417,7 +416,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V39</div>
+    <div id="version">V41</div>
   </div>
 </div>
 
@@ -445,70 +444,69 @@
   const BAR_PADDING = 3;
 
   // ── World Series data 1969–2025 ──
-  // 1994: no World Series (strike)
   const WS_WINNERS = {
-    1969: { team: 'New York Mets',         color: '#002D72' },
-    1970: { team: 'Baltimore Orioles',      color: '#DF4601' },
-    1971: { team: 'Pittsburgh Pirates',     color: '#FDB827' },
-    1972: { team: 'Oakland Athletics',      color: '#003831' },
-    1973: { team: 'Oakland Athletics',      color: '#003831' },
-    1974: { team: 'Oakland Athletics',      color: '#003831' },
-    1975: { team: 'Cincinnati Reds',        color: '#C6011F' },
-    1976: { team: 'Cincinnati Reds',        color: '#C6011F' },
-    1977: { team: 'New York Yankees',       color: '#003087' },
-    1978: { team: 'New York Yankees',       color: '#003087' },
-    1979: { team: 'Pittsburgh Pirates',     color: '#FDB827' },
-    1980: { team: 'Philadelphia Phillies',  color: '#E81828' },
+    1969: { team: 'New York Mets',         color: '#0837a2' },
+    1970: { team: 'Baltimore Orioles',      color: '#e36a30' },
+    1971: { team: 'Pittsburgh Pirates',     color: '#e3aa30' },
+    1972: { team: 'Oakland Athletics',      color: '#04a01d' },
+    1973: { team: 'Oakland Athletics',      color: '#04a01d' },
+    1974: { team: 'Oakland Athletics',      color: '#04a01d' },
+    1975: { team: 'Cincinnati Reds',        color: '#cc2509' },
+    1976: { team: 'Cincinnati Reds',        color: '#cc2509' },
+    1977: { team: 'New York Yankees',       color: '#b4b6ba' },
+    1978: { team: 'New York Yankees',       color: '#b4b6ba' },
+    1979: { team: 'Pittsburgh Pirates',     color: '#e3aa30' },
+    1980: { team: 'Philadelphia Phillies',  color: '#cc2509' },
     1981: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
-    1982: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
-    1983: { team: 'Baltimore Orioles',      color: '#DF4601' },
-    1984: { team: 'Detroit Tigers',         color: '#0C2340' },
-    1985: { team: 'Kansas City Royals',     color: '#004687' },
-    1986: { team: 'New York Mets',          color: '#002D72' },
-    1987: { team: 'Minnesota Twins',        color: '#002B5C' },
+    1982: { team: 'St. Louis Cardinals',    color: '#b92e24' },
+    1983: { team: 'Baltimore Orioles',      color: '#e36a30' },
+    1984: { team: 'Detroit Tigers',         color: '#0837a2' },
+    1985: { team: 'Kansas City Royals',     color: '#134cbf' },
+    1986: { team: 'New York Mets',          color: '#0837a2' },
+    1987: { team: 'Minnesota Twins',        color: '#b92e24' },
     1988: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
-    1989: { team: 'Oakland Athletics',      color: '#003831' },
-    1990: { team: 'Cincinnati Reds',        color: '#C6011F' },
-    1991: { team: 'Minnesota Twins',        color: '#002B5C' },
-    1992: { team: 'Toronto Blue Jays',      color: '#134A8E' },
-    1993: { team: 'Toronto Blue Jays',      color: '#134A8E' },
-    1994: null, // no World Series
-    1995: { team: 'Atlanta Braves',         color: '#CE1141' },
-    1996: { team: 'New York Yankees',       color: '#003087' },
-    1997: { team: 'Florida Marlins',        color: '#0077C8' },
-    1998: { team: 'New York Yankees',       color: '#003087' },
-    1999: { team: 'New York Yankees',       color: '#003087' },
-    2000: { team: 'New York Yankees',       color: '#003087' },
-    2001: { team: 'Arizona Diamondbacks',   color: '#A71930' },
-    2002: { team: 'Anaheim Angels',         color: '#BA0021' },
-    2003: { team: 'Florida Marlins',        color: '#0077C8' },
-    2004: { team: 'Boston Red Sox',         color: '#BD3039' },
-    2005: { team: 'Chicago White Sox',      color: '#27251F' },
-    2006: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
-    2007: { team: 'Boston Red Sox',         color: '#BD3039' },
-    2008: { team: 'Philadelphia Phillies',  color: '#E81828' },
-    2009: { team: 'New York Yankees',       color: '#003087' },
-    2010: { team: 'San Francisco Giants',   color: '#FD5A1E' },
-    2011: { team: 'St. Louis Cardinals',    color: '#C41E3A' },
-    2012: { team: 'San Francisco Giants',   color: '#FD5A1E' },
-    2013: { team: 'Boston Red Sox',         color: '#BD3039' },
-    2014: { team: 'San Francisco Giants',   color: '#FD5A1E' },
-    2015: { team: 'Kansas City Royals',     color: '#004687' },
-    2016: { team: 'Chicago Cubs',           color: '#0E3386' },
-    2017: { team: 'Houston Astros',         color: '#EB6E1F' },
-    2018: { team: 'Boston Red Sox',         color: '#BD3039' },
-    2019: { team: 'Washington Nationals',   color: '#AB0003' },
+    1989: { team: 'Oakland Athletics',      color: '#04a01d' },
+    1990: { team: 'Cincinnati Reds',        color: '#cc2509' },
+    1991: { team: 'Minnesota Twins',        color: '#b92e24' },
+    1992: { team: 'Toronto Blue Jays',      color: '#134cbf' },
+    1993: { team: 'Toronto Blue Jays',      color: '#134cbf' },
+    1994: { team: "No World Series due to player's strike.", color: '#555555', noWS: true },
+    1995: { team: 'Atlanta Braves',         color: '#cc2509' },
+    1996: { team: 'New York Yankees',       color: '#b4b6ba' },
+    1997: { team: 'Florida Marlins',        color: '#0b9eab' },
+    1998: { team: 'New York Yankees',       color: '#b4b6ba' },
+    1999: { team: 'New York Yankees',       color: '#b4b6ba' },
+    2000: { team: 'New York Yankees',       color: '#b4b6ba' },
+    2001: { team: 'Arizona Diamondbacks',   color: '#6024b9' },
+    2002: { team: 'Anaheim Angels',         color: '#b92e24' },
+    2003: { team: 'Florida Marlins',        color: '#0b9eab' },
+    2004: { team: 'Boston Red Sox',         color: '#b92e24' },
+    2005: { team: 'Chicago White Sox',      color: '#b4b6ba' },
+    2006: { team: 'St. Louis Cardinals',    color: '#b92e24' },
+    2007: { team: 'Boston Red Sox',         color: '#b92e24' },
+    2008: { team: 'Philadelphia Phillies',  color: '#cc2509' },
+    2009: { team: 'New York Yankees',       color: '#b4b6ba' },
+    2010: { team: 'San Francisco Giants',   color: '#e36a30' },
+    2011: { team: 'St. Louis Cardinals',    color: '#b92e24' },
+    2012: { team: 'San Francisco Giants',   color: '#e36a30' },
+    2013: { team: 'Boston Red Sox',         color: '#b92e24' },
+    2014: { team: 'San Francisco Giants',   color: '#e36a30' },
+    2015: { team: 'Kansas City Royals',     color: '#134cbf' },
+    2016: { team: 'Chicago Cubs',           color: '#1330bf' },
+    2017: { team: 'Houston Astros cheated', color: '#cc6909' },
+    2018: { team: 'Boston Red Sox',         color: '#b92e24' },
+    2019: { team: 'Washington Nationals',   color: '#cc2509' },
     2020: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
-    2021: { team: 'Atlanta Braves',         color: '#CE1141' },
-    2022: { team: 'Houston Astros',         color: '#EB6E1F' },
-    2023: { team: 'Texas Rangers',          color: '#003278' },
+    2021: { team: 'Atlanta Braves',         color: '#cc2509' },
+    2022: { team: 'Houston Astros',         color: '#cc6909' },
+    2023: { team: 'Texas Rangers',          color: '#0837a2' },
     2024: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
     2025: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
   };
 
   // Count total WS years (exclude 1994)
   const WS_YEARS = Object.keys(WS_WINNERS).map(Number).sort((a,b) => a - b);
-  const WS_TOTAL = WS_YEARS.filter(y => WS_WINNERS[y] !== null).length;
+  const WS_TOTAL = WS_YEARS.length;
 
   // Revealed state
   let wsRevealed = {};
@@ -617,23 +615,17 @@
 
       const teamEl = document.createElement('div');
       teamEl.className = 'ws-team';
-      if (data === null) {
-        // 1994 — no WS
-        teamEl.style.color = '#444';
-        teamEl.textContent = 'No World Series';
+      teamEl.style.color = data.color;
+
+      if (wsRevealed[year]) {
+        teamEl.textContent = data.team;
         teamEl.classList.add('revealed');
-      } else {
-        teamEl.style.color = data.color;
-        if (wsRevealed[year]) {
-          teamEl.textContent = data.team;
-          teamEl.classList.add('revealed');
-        }
       }
 
       row.appendChild(yearEl);
       row.appendChild(teamEl);
 
-      if (data !== null && !wsRevealed[year]) {
+      if (!wsRevealed[year]) {
         row.addEventListener('click', () => revealWS(year, teamEl, data));
       }
 
@@ -645,7 +637,7 @@
   function revealWS(year, teamEl, data) {
     if (wsRevealed[year]) return;
     wsRevealed[year] = true;
-    wsRevealedCount++;
+    wsRevealedCount++; // count all years including 1994
     teamEl.textContent = data.team;
     teamEl.classList.add('revealed');
     updateWSTally();
