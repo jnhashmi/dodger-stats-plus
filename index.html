@@ -429,7 +429,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V50</div>
+    <div id="version">V51</div>
   </div>
 </div>
 
@@ -992,10 +992,16 @@
             // byDateRange — sum all splits
             p.priorHr = splits.reduce((sum, s) => sum + (s.stat?.homeRuns ?? 0), 0);
           } else {
-            // yearByYear — filter to prior year only, sum across all teams
-            p.priorHr = splits
-              .filter(s => s.season === String(priorYear))
-              .reduce((sum, s) => sum + (s.stat?.homeRuns ?? 0), 0);
+            // yearByYear — filter to prior year only
+            const priorSplits = splits.filter(s => s.season === String(priorYear));
+            // If there's a totals row (no team), use it to avoid double-counting trades
+            const totalsRow = priorSplits.find(s => !s.team);
+            if (totalsRow) {
+              p.priorHr = totalsRow.stat?.homeRuns ?? 0;
+            } else {
+              // Otherwise sum across all teams
+              p.priorHr = priorSplits.reduce((sum, s) => sum + (s.stat?.homeRuns ?? 0), 0);
+            }
           }
         } else {
           p.priorHr = 0;
