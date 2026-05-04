@@ -429,7 +429,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V45</div>
+    <div id="version">V46</div>
   </div>
 </div>
 
@@ -896,6 +896,10 @@
   async function fetchData(year) {
     const priorYear = year - 1;
 
+    // Calculate the equivalent date in the prior year
+    const today = new Date();
+    const priorDate = `${String(today.getMonth() + 1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}/${priorYear}`;
+
     // Fetch current year roster with hitting stats
     const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
     const res = await fetch(url);
@@ -918,40 +922,28 @@
         return true;
       });
 
-    // Fetch prior year Dodger roster stats (one call for most players)
-    let priorStatsMap = {};
-    try {
-      const priorUrl = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${priorYear}&hydrate=person(stats(type=season,season=${priorYear},group=hitting))`;
-      const priorRes = await fetch(priorUrl);
-      if (priorRes.ok) {
-        const priorData = await priorRes.json();
-        (priorData.roster || []).forEach(p => {
-          const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
-          priorStatsMap[p.person?.id] = stat?.homeRuns ?? 0;
-        });
-      }
-    } catch(e) {}
-
-    // For players NOT on last year's Dodger roster, fetch their personal prior year stats
-    const missing = currentPlayers.filter(p => p.id && !(p.id in priorStatsMap));
-    await Promise.all(missing.map(async p => {
+    // Fetch prior year stats through the same calendar date for each player in parallel
+    await Promise.all(currentPlayers.map(async p => {
       try {
-        const statUrl = `https://statsapi.mlb.com/api/v1/people/${p.id}/stats?stats=season&season=${priorYear}&group=hitting`;
+        const statUrl = `https://statsapi.mlb.com/api/v1/people/${p.id}/stats?stats=season&season=${priorYear}&group=hitting&endDate=${priorDate}`;
         const statRes = await fetch(statUrl);
         if (statRes.ok) {
           const statData = await statRes.json();
           const splits = statData.stats?.[0]?.splits || [];
           // Sum HRs across all teams if traded mid-season
-          const totalHR = splits.reduce((sum, s) => sum + (s.stat?.homeRuns ?? 0), 0);
-          priorStatsMap[p.id] = totalHR;
+          p.priorHr = splits.reduce((sum, s) => sum + (s.stat?.homeRuns ?? 0), 0);
+        } else {
+          p.priorHr = 0;
         }
-      } catch(e) {}
+      } catch(e) {
+        p.priorHr = 0;
+      }
     }));
 
-    return currentPlayers.map(({ name, hr, id }) => ({
+    return currentPlayers.map(({ name, hr, priorHr }) => ({
       name,
       hr,
-      priorHr: priorStatsMap[id] ?? 0
+      priorHr: priorHr || 0
     }));
   }
 
