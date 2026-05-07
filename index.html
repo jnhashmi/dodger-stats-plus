@@ -429,7 +429,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V53</div>
+    <div id="version">V54</div>
   </div>
 </div>
 
@@ -740,7 +740,7 @@
     animateSort(sortPlayers(players, sortMode));
   });
 
-  function animateHRGrowIn(sorted) {
+  function animateHRGrowIn(sorted, showGrey) {
     const maxHR = Math.max(...sorted.map(p => p.hr), 0);
     const rows = document.querySelectorAll('.player-row');
     const rowMap = {};
@@ -820,8 +820,7 @@
       });
       if (tick >= maxHR) {
         clearInterval(timer);
-        // Now animate grey bars
-        setTimeout(animateGrey, 80);
+        if (showGrey) setTimeout(animateGrey, 80);
       }
     }, 40);
   }
@@ -920,7 +919,7 @@
     img.onerror = () => { canvas.remove(); onComplete(); };
   }
 
-  function transitionToYear(sorted) {
+  function transitionToYear(sorted, year) {
     const container = document.getElementById('player-list');
     container.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
     container.style.opacity = '0';
@@ -935,7 +934,11 @@
       container.style.opacity = '1';
       container.style.transform = 'translateY(0)';
       setTimeout(() => {
-        playBatterAnimation(() => { animateHRGrowIn(sorted); });
+        if (year === CURRENT_YEAR) {
+          playBatterAnimation(() => { animateHRGrowIn(sorted, true); });
+        } else {
+          animateHRGrowIn(sorted, false);
+        }
       }, 220);
     }, 220);
   }
@@ -973,41 +976,25 @@
         return true;
       });
 
-    // Fetch prior year stats for each player in parallel
-    await Promise.all(currentPlayers.map(async p => {
-      try {
-        let statUrl;
-        if (isCurrentYear) {
-          // Date-bounded: same calendar date last year
-          statUrl = `https://statsapi.mlb.com/api/v1/people/${p.id}/stats?stats=byDateRange&season=${priorYear}&group=hitting&startDate=01/01/${priorYear}&endDate=${priorDateStr}`;
-        } else {
-          // Full prior season totals — use yearByYear to get reliable multi-team data
-          statUrl = `https://statsapi.mlb.com/api/v1/people/${p.id}/stats?stats=yearByYear&group=hitting`;
-        }
-        const statRes = await fetch(statUrl);
-        if (statRes.ok) {
-          const statData = await statRes.json();
-          const splits = statData.stats?.[0]?.splits || [];
-          if (isCurrentYear) {
-            // byDateRange — take max single split to avoid double-counting trades
+    // Only fetch prior year stats for current year
+    if (isCurrentYear) {
+      await Promise.all(currentPlayers.map(async p => {
+        try {
+          const statUrl = `https://statsapi.mlb.com/api/v1/people/${p.id}/stats?stats=byDateRange&season=${priorYear}&group=hitting&startDate=01/01/${priorYear}&endDate=${priorDateStr}`;
+          const statRes = await fetch(statUrl);
+          if (statRes.ok) {
+            const statData = await statRes.json();
+            const splits = statData.stats?.[0]?.splits || [];
+            // Take max single split to avoid double-counting trades
             p.priorHr = splits.reduce((max, s) => Math.max(max, s.stat?.homeRuns ?? 0), 0);
           } else {
-            // yearByYear — filter to prior year, take max single split to avoid double-counting
-            const priorSplits = splits.filter(s => s.season === String(priorYear));
-            const totalsRow = priorSplits.find(s => !s.team);
-            if (totalsRow) {
-              p.priorHr = totalsRow.stat?.homeRuns ?? 0;
-            } else {
-              p.priorHr = priorSplits.reduce((max, s) => Math.max(max, s.stat?.homeRuns ?? 0), 0);
-            }
+            p.priorHr = 0;
           }
-        } else {
+        } catch(e) {
           p.priorHr = 0;
         }
-      } catch(e) {
-        p.priorHr = 0;
-      }
-    }));
+      }));
+    }
 
     return currentPlayers.map(({ name, hr, priorHr }) => ({
       name,
@@ -1038,9 +1025,13 @@
           const container = document.getElementById('player-list');
           container.style.opacity = '1';
           container.style.transform = 'translateY(0)';
-          animateHRGrowIn(sorted);
+          if (year === CURRENT_YEAR) {
+            playBatterAnimation(() => { animateHRGrowIn(sorted, true); });
+          } else {
+            animateHRGrowIn(sorted, false);
+          }
         } else {
-          transitionToYear(sorted);
+          transitionToYear(sorted, year);
         }
         if (year === CURRENT_YEAR) {
           pollTimer = setInterval(() => refreshCurrentYear(), POLL_MS);
