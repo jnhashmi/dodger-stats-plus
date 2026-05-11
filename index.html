@@ -41,7 +41,7 @@
     #header-bar {
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 300;
       background: #000;
       padding-top: max(env(safe-area-inset-top), 20px);
       padding-left: max(env(safe-area-inset-left), 24px);
@@ -176,6 +176,8 @@
       align-items: center;
       justify-content: center;
       transition: opacity 0.15s;
+      position: relative;
+      z-index: 300;
     }
     #home-btn:active { opacity: 0.5; }
 
@@ -395,7 +397,6 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      gap: 12px;
     }
 
     /* Landscape: slides in from right */
@@ -429,6 +430,16 @@
     }
 
     /* Nav buttons — match year button style exactly */
+    #nav-panel {
+      gap: 0; /* remove gap — use row-height spacing instead */
+    }
+
+    .nav-btn-row {
+      height: 40px; /* exactly one player row height */
+      display: flex;
+      align-items: center; /* button baseline aligns with player row */
+    }
+
     .nav-btn {
       font-size: 18px;
       font-weight: 700;
@@ -653,16 +664,16 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V57</div>
+    <div id="version">V59</div>
   </div>
 </div>
 
 <!-- Nav overlay -->
 <div id="nav-overlay">
   <div id="nav-panel">
-    <button class="nav-btn" data-screen="hr">Home Runs</button>
-    <button class="nav-btn" data-screen="ops">On-base Plus Slugging</button>
-    <button class="nav-btn" data-screen="ws">World Series Challenge</button>
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="hr">Home Runs</button></div>
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="ops">On-base Plus Slugging</button></div>
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="ws">World Series Challenge</button></div>
   </div>
 </div>
 
