@@ -376,12 +376,18 @@
 
     /* ── Nav overlay ── */
     #nav-overlay {
-      display: none;
+      display: block;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: 200;
+      pointer-events: none;
+      background: rgba(0,0,0,0);
+      transition: background 0.25s ease;
     }
-    #nav-overlay.open { display: block; }
+    #nav-overlay.open {
+      pointer-events: auto;
+      background: rgba(0,0,0,0.4);
+    }
 
     #nav-panel {
       position: absolute;
@@ -397,39 +403,32 @@
       #nav-panel {
         top: 0; right: 0; bottom: 0;
         width: 42%;
-        padding: max(env(safe-area-inset-top), 20px) max(env(safe-area-inset-right), 24px) 40px 32px;
-        padding-top: max(env(safe-area-inset-top), 52px);
-        transform: translateX(100%);
+        /* padding-top calculated to push first button to first-row baseline */
+        padding-top: 0;
+        padding-left: 32px;
+        padding-right: max(env(safe-area-inset-right), 24px);
+        padding-bottom: 40px;
+        transform: translateX(110%);
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
       #nav-overlay.open #nav-panel { transform: translateX(0); }
     }
 
-    /* Portrait: slides in from top */
+    /* Portrait: slides down from top */
     @media (orientation: portrait) {
       #nav-panel {
         top: 0; left: 0; right: 0;
-        padding: max(env(safe-area-inset-top), 20px) 24px 32px 24px;
-        transform: translateY(-100%);
+        padding-top: 0;
+        padding-left: max(env(safe-area-inset-left), 24px);
+        padding-right: max(env(safe-area-inset-right), 24px);
+        padding-bottom: 32px;
+        transform: translateY(-110%);
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
       #nav-overlay.open #nav-panel { transform: translateY(0); }
     }
 
-    /* Home plate icon in nav panel */
-    #nav-home-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      align-self: flex-end;
-      margin-bottom: 24px;
-      opacity: 1;
-      transition: opacity 0.15s;
-    }
-    #nav-home-btn:active { opacity: 0.6; }
-
-    /* Nav buttons */
+    /* Nav buttons — match year button style exactly */
     .nav-btn {
       font-size: 18px;
       font-weight: 700;
@@ -438,18 +437,19 @@
       background: none;
       border: 0.5px solid rgba(255,255,255,0.5);
       border-radius: 4px;
-      padding: 8px 16px;
+      padding: 2px 8px;
       cursor: pointer;
       text-align: left;
       line-height: 1.4;
       white-space: nowrap;
       transition: background 0.1s;
-      width: 100%;
+      display: inline-block;
+      width: auto;
     }
     .nav-btn:active { background: rgba(255,255,255,0.15); }
 
     @media (orientation: portrait) {
-      .nav-btn { font-size: 18px; }
+      .nav-btn { font-size: 15px; }
     }
 
     /* ── OPS screen ── */
@@ -653,18 +653,13 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V56</div>
+    <div id="version">V57</div>
   </div>
 </div>
 
 <!-- Nav overlay -->
 <div id="nav-overlay">
   <div id="nav-panel">
-    <button id="nav-home-btn" aria-label="Close navigation">
-      <svg width="19" height="24" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 4 L20 4 L20 15 L11 23 L2 15 Z" stroke="#ffffff" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
-      </svg>
-    </button>
     <button class="nav-btn" data-screen="hr">Home Runs</button>
     <button class="nav-btn" data-screen="ops">On-base Plus Slugging</button>
     <button class="nav-btn" data-screen="ws">World Series Challenge</button>
@@ -824,8 +819,6 @@
     { min: 0.900, max: 1.000, color: '#78c043' },
     { min: 1.000, max: 1.200, color: '#4b8d24' },
   ];
-  const OPS_LABELS = ['.0', '.650', '.750', '.900', '1.000'];
-  const OPS_LABEL_POS = [0, 0.650/1.2, 0.750/1.2, 0.900/1.2, 1.000/1.2]; // as fraction of bar
 
   function getOPSColor(ops) {
     for (const t of OPS_THRESHOLDS) {
@@ -834,18 +827,27 @@
     return '#4b8d24';
   }
 
-  function getOPSDotPos(ops) {
-    // Position as fraction of full bar width (capped at 1.1/1.2)
-    const MAX_OPS = 1.2;
-    return Math.min(ops / MAX_OPS, 1.0);
+  function alignNavPanel() {
+    const panel = document.getElementById('nav-panel');
+    const firstRow = document.querySelector('.player-row, .ops-row, .ws-row');
+    if (firstRow) {
+      const rowRect = firstRow.getBoundingClientRect();
+      panel.style.paddingTop = rowRect.top + 'px';
+    } else {
+      const headerBar = document.getElementById('header-bar');
+      const headerH = headerBar ? headerBar.getBoundingClientRect().bottom : 80;
+      panel.style.paddingTop = (headerH + 24) + 'px';
+    }
   }
 
   document.getElementById('home-btn').addEventListener('click', () => {
-    document.getElementById('nav-overlay').classList.add('open');
-  });
-
-  document.getElementById('nav-home-btn').addEventListener('click', () => {
-    document.getElementById('nav-overlay').classList.remove('open');
+    const overlay = document.getElementById('nav-overlay');
+    if (overlay.classList.contains('open')) {
+      overlay.classList.remove('open');
+    } else {
+      alignNavPanel();
+      overlay.classList.add('open');
+    }
   });
 
   document.getElementById('nav-overlay').addEventListener('click', (e) => {
@@ -857,16 +859,13 @@
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.getElementById('nav-overlay').classList.remove('open');
-      const screen = btn.dataset.screen;
-      navigateTo(screen);
+      navigateTo(btn.dataset.screen);
     });
   });
 
   function navigateTo(screen) {
-    // Remove all mode classes
     document.body.classList.remove('ws-mode', 'ops-mode');
     currentScreen = screen;
-
     if (screen === 'hr') {
       document.getElementById('last-updated').style.display = '';
     } else if (screen === 'ws') {
