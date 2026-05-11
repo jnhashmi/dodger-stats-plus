@@ -108,6 +108,16 @@
       margin-left: 11px;
     }
 
+    #ops-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      white-space: nowrap;
+      display: none;
+      margin-left: 11px;
+    }
+
     #year-btn {
       font-size: 18px;
       font-weight: 700;
@@ -477,36 +487,37 @@
     /* ── OPS screen ── */
     #ops-screen { display: none; }
 
-    /* OPS scale bar container */
+    /* OPS scale bar container — same row height as player rows */
     #ops-scale {
       margin-top: 1.5em;
       margin-bottom: 0;
       position: relative;
-      height: 40px; /* same row height — scale sits in its own row */
+      height: 40px;
     }
 
-    /* The color bar itself */
+    /* The color bar itself — aligned to name column */
     #ops-bar {
       position: absolute;
-      left: 190px; /* aligns with tick area — same as name column width */
-      right: 32px; /* aligns with hr-count area */
+      left: 190px;
+      right: 48px;
       top: 50%;
       transform: translateY(-50%);
       height: 4px;
-      border-radius: 0;
       display: flex;
-      overflow: hidden;
+      gap: 5px; /* 5px black gap between segments */
+      overflow: visible;
     }
 
     .ops-segment {
       height: 100%;
+      flex-shrink: 0;
     }
 
-    /* Threshold labels above bar */
+    /* Threshold labels — same size as "Best in landscape view" */
     #ops-labels {
       position: absolute;
       left: 190px;
-      right: 32px;
+      right: 48px;
       top: 0;
       height: 100%;
       pointer-events: none;
@@ -514,19 +525,21 @@
 
     .ops-label {
       position: absolute;
-      font-size: 11px;
-      font-weight: 400;
+      font-size: 13px;
+      font-weight: 700;
       font-family: 'Bricolage Grotesque', sans-serif;
       color: #6e6e6e;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       transform: translateX(-50%);
-      top: 0;
+      top: 2px;
       line-height: 1;
     }
 
-    /* Vertical divider lines in rows */
+    /* Vertical divider lines — centered in the 5px gap */
     .ops-divider {
       position: absolute;
-      top: 3px; /* same gap as BAR_PADDING */
+      top: 3px;
       bottom: 3px;
       width: 0.5px;
       background: #6e6e6e;
@@ -541,7 +554,6 @@
       gap: 14px;
       height: 40px;
       position: relative;
-      cursor: pointer;
     }
 
     .ops-name {
@@ -636,7 +648,7 @@
         </div>
         <span id="home-runs-label">Home Runs</span>
         <span id="ws-label">World Series Challenge</span>
-        <span id="ops-label" style="display:none;font-size:18px;font-weight:700;font-family:'Bricolage Grotesque',sans-serif;color:#fff;white-space:nowrap;margin-left:11px;">On-base Plus Slugging</span>
+        <span id="ops-label">On-base Plus Slugging</span>
         <button id="year-btn">2026</button>
         <span id="ws-tally">Total 0/57</span>
         <button id="ws-clear-btn">Clear</button>
@@ -671,7 +683,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V83</div>
+    <div id="version">V84</div>
   </div>
 </div>
 
@@ -847,7 +859,7 @@
     { min: 0.650, max: 0.750, color: '#fcb035' },
     { min: 0.750, max: 0.900, color: '#e8e613' },
     { min: 0.900, max: 1.000, color: '#78c043' },
-    { min: 1.000, max: 1.200, color: '#4b8d24' },
+    { min: 1.000, max: 1.100, color: '#4b8d24' },
   ];
 
   function getOPSColor(ops) {
@@ -1410,31 +1422,36 @@
     } catch (e) {}
   }
 
-  // ── OPS functions ──
+  const MAX_OPS = 1.1;
+  const OPS_SEGMENTS = [
+    { from: 0,     to: 0.650, color: '#d51920' },
+    { from: 0.650, to: 0.750, color: '#fcb035' },
+    { from: 0.750, to: 0.900, color: '#e8e613' },
+    { from: 0.900, to: 1.000, color: '#78c043' },
+    { from: 1.000, to: MAX_OPS, color: '#4b8d24' },
+  ];
+  const OPS_THRESHOLDS_VALS = [0.650, 0.750, 0.900, 1.000];
+
   function buildOPSScale() {
     const bar = document.getElementById('ops-bar');
     const labels = document.getElementById('ops-labels');
     bar.innerHTML = '';
     labels.innerHTML = '';
 
-    const MAX_OPS = 1.2;
-    const segments = [
-      { from: 0,     to: 0.650, color: '#d51920' },
-      { from: 0.650, to: 0.750, color: '#fcb035' },
-      { from: 0.750, to: 0.900, color: '#e8e613' },
-      { from: 0.900, to: 1.000, color: '#78c043' },
-      { from: 1.000, to: MAX_OPS, color: '#4b8d24' },
-    ];
-
-    segments.forEach(s => {
+    // Calculate total bar width excluding gaps (4 gaps of 5px each)
+    // Segments sized proportionally to their OPS range
+    OPS_SEGMENTS.forEach(s => {
       const seg = document.createElement('div');
       seg.className = 'ops-segment';
-      seg.style.width = `${((s.to - s.from) / MAX_OPS) * 100}%`;
+      // Width as percentage of MAX_OPS range
+      const pct = ((s.to - s.from) / MAX_OPS) * 100;
+      seg.style.width = `calc(${pct}% - 4px)`; // subtract gap portion
       seg.style.background = s.color;
+      seg.style.flexShrink = '0';
       bar.appendChild(seg);
     });
 
-    // Labels
+    // Labels at threshold positions
     const labelData = [
       { val: '.0',    pos: 0 },
       { val: '.650',  pos: 0.650 / MAX_OPS },
@@ -1459,33 +1476,32 @@
     return (data.roster || [])
       .map(p => {
         const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
-        const obp = stat?.obp ?? 0;
-        const slg = stat?.slg ?? 0;
-        const ops = Math.round((obp + slg) * 1000) / 1000;
+        const obp = parseFloat(stat?.obp) || 0;
+        const slg = parseFloat(stat?.slg) || 0;
+        const opsVal = parseFloat(stat?.ops) || (obp + slg);
+        const ops = Math.round(opsVal * 1000) / 1000;
         return {
           name: p.person?.fullName || 'Unknown',
           ops,
           pos: p.position?.abbreviation || '',
-          ab: stat?.atBats ?? 0
+          ab: parseInt(stat?.atBats) || 0
         };
       })
       .filter(p => {
         if (p.name === 'Shohei Ohtani') return true;
         if (p.pos === 'P') return false;
-        return p.ab >= 10; // minimum AB to show
+        return p.ab >= 10;
       })
       .sort((a, b) => b.ops - a.ops);
   }
 
   let opsSortMode = 'most';
 
-  function renderOPSList(players) {
-    const list = document.getElementById('ops-list');
-    list.innerHTML = '';
-    const MAX_OPS = 1.2;
-    const BAR_PAD = 3; // same gap as HR bars
+  function renderOPSList(list) {
+    const container = document.getElementById('ops-list');
+    container.innerHTML = '';
 
-    players.forEach(p => {
+    list.forEach(p => {
       const row = document.createElement('div');
       row.className = 'ops-row';
       row.dataset.name = p.name;
@@ -1497,37 +1513,34 @@
       const track = document.createElement('div');
       track.className = 'ops-track';
 
-      // Vertical dividers at threshold positions (with gap — same as BAR_PADDING)
-      const thresholds = [0.650, 0.750, 0.900, 1.000];
-      thresholds.forEach(t => {
+      // Vertical dividers centered in 5px gaps between segments
+      OPS_THRESHOLDS_VALS.forEach(t => {
         const div = document.createElement('div');
         div.className = 'ops-divider';
-        div.style.left = `${(t / MAX_OPS) * 100}%`;
+        div.style.left = `calc(${(t / MAX_OPS) * 100}% - 0.25px)`;
         track.appendChild(div);
       });
 
-      // Dot
-      if (p.ab >= 10) {
-        const dot = document.createElement('div');
-        dot.className = 'ops-dot';
-        dot.style.background = getOPSColor(p.ops);
-        const pct = Math.min(p.ops / MAX_OPS, 0.98); // cap at right edge
-        dot.style.left = `${pct * 100}%`;
-        track.appendChild(dot);
-      }
+      // Dot — capped at 98% so it doesn't fall off right edge
+      const dot = document.createElement('div');
+      dot.className = 'ops-dot';
+      dot.style.background = getOPSColor(p.ops);
+      const pct = Math.min(p.ops / MAX_OPS, 0.98);
+      dot.style.left = `${pct * 100}%`;
+      track.appendChild(dot);
 
       const valueEl = document.createElement('div');
       valueEl.className = 'ops-value';
-      valueEl.textContent = p.ops > 0 ? p.ops.toFixed(3).replace(/^0/, '') : '—';
+      valueEl.textContent = p.ops > 0 ? ('.' + Math.round(p.ops * 1000).toString().padStart(3, '0')) : '—';
 
       row.appendChild(nameEl);
       row.appendChild(track);
       row.appendChild(valueEl);
-      list.appendChild(row);
+      container.appendChild(row);
     });
 
     // Tap name to sort
-    list.querySelectorAll('.ops-name').forEach(nameEl => {
+    container.querySelectorAll('.ops-name').forEach(nameEl => {
       nameEl.addEventListener('click', () => {
         opsSortMode = opsSortMode === 'most' ? 'alpha' : 'most';
         const sorted = opsSortMode === 'most'
