@@ -376,7 +376,7 @@
       #header-bar { padding-bottom: 10px; }
     }
 
-    /* ── Nav overlay ── */
+    /* ── Nav overlay backdrop ── */
     #nav-overlay {
       display: block;
       position: fixed;
@@ -391,21 +391,23 @@
       background: rgba(0,0,0,0.4);
     }
 
+    /* Nav panel — sits above everything including header */
     #nav-panel {
-      position: absolute;
+      position: fixed;
       background: #0977cc;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      z-index: 350;
+      z-index: 400;
+      pointer-events: none;
     }
+    #nav-panel.open { pointer-events: auto; }
 
     /* Landscape: slides in from right */
     @media (orientation: landscape) {
       #nav-panel {
         top: 0; right: 0; bottom: 0;
         width: 42%;
-        /* padding-top calculated to push first button to first-row baseline */
         padding-top: 0;
         padding-left: 32px;
         padding-right: max(env(safe-area-inset-right), 24px);
@@ -413,7 +415,7 @@
         transform: translateX(110%);
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      #nav-overlay.open #nav-panel { transform: translateX(0); }
+      #nav-panel.open { transform: translateX(0); }
     }
 
     /* Portrait: slides down from top */
@@ -427,18 +429,18 @@
         transform: translateY(-110%);
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      #nav-overlay.open #nav-panel { transform: translateY(0); }
+      #nav-panel.open { transform: translateY(0); }
     }
 
     /* Nav buttons — match year button style exactly */
     #nav-panel {
-      gap: 0; /* remove gap — use row-height spacing instead */
+      gap: 0;
     }
 
     .nav-btn-row {
-      height: 40px; /* exactly one player row height */
+      height: 40px;
       display: flex;
-      align-items: center; /* button baseline aligns with player row */
+      align-items: center;
     }
 
     .nav-btn {
@@ -455,13 +457,25 @@
       line-height: 1.4;
       white-space: nowrap;
       transition: background 0.1s;
-      display: inline-block;
-      width: auto;
+      display: block;
+      width: 100%; /* full width in landscape */
     }
     .nav-btn:active { background: rgba(255,255,255,0.15); }
 
     @media (orientation: portrait) {
-      .nav-btn { font-size: 15px; }
+      .nav-btn {
+        font-size: 15px;
+        width: auto;
+        padding-right: 40px;
+        box-sizing: border-box;
+        /* All buttons same width: stretch to widest (World Series Challenge + 40px) */
+        min-width: 100%;
+      }
+      #nav-panel {
+        /* Shrink panel to content width in portrait */
+        display: inline-flex;
+        flex-direction: column;
+      }
     }
 
     /* ── OPS screen ── */
@@ -665,17 +679,18 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V60</div>
+    <div id="version">V62</div>
   </div>
 </div>
 
-<!-- Nav overlay -->
-<div id="nav-overlay">
-  <div id="nav-panel">
-    <div class="nav-btn-row"><button class="nav-btn" data-screen="hr">Home Runs</button></div>
-    <div class="nav-btn-row"><button class="nav-btn" data-screen="ops">On-base Plus Slugging</button></div>
-    <div class="nav-btn-row"><button class="nav-btn" data-screen="ws">World Series Challenge</button></div>
-  </div>
+<!-- Nav backdrop -->
+<div id="nav-overlay"></div>
+
+<!-- Nav panel — direct child of body so z-index beats header -->
+<div id="nav-panel">
+  <div class="nav-btn-row"><button class="nav-btn" data-screen="hr">Home Runs</button></div>
+  <div class="nav-btn-row"><button class="nav-btn" data-screen="ops">On-base Plus Slugging</button></div>
+  <div class="nav-btn-row"><button class="nav-btn" data-screen="ws">World Series Challenge</button></div>
 </div>
 
 <!-- Year picker overlay -->
@@ -852,25 +867,35 @@
     }
   }
 
+  function openNav() {
+    alignNavPanel();
+    document.getElementById('nav-overlay').classList.add('open');
+    document.getElementById('nav-panel').classList.add('open');
+  }
+
+  function closeNav() {
+    document.getElementById('nav-overlay').classList.remove('open');
+    document.getElementById('nav-panel').classList.remove('open');
+  }
+
   document.getElementById('home-btn').addEventListener('click', () => {
-    const overlay = document.getElementById('nav-overlay');
-    if (overlay.classList.contains('open')) {
-      overlay.classList.remove('open');
+    const panel = document.getElementById('nav-panel');
+    if (panel.classList.contains('open')) {
+      closeNav();
     } else {
-      alignNavPanel();
-      overlay.classList.add('open');
+      openNav();
     }
   });
 
   document.getElementById('nav-overlay').addEventListener('click', (e) => {
     if (e.target === document.getElementById('nav-overlay')) {
-      document.getElementById('nav-overlay').classList.remove('open');
+      closeNav();
     }
   });
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.getElementById('nav-overlay').classList.remove('open');
+      closeNav();
       navigateTo(btn.dataset.screen);
     });
   });
