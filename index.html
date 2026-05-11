@@ -475,17 +475,30 @@
     }
     .nav-btn:active { background: rgba(255,255,255,0.15); }
 
+    @media (orientation: landscape) {
+      #nav-btn-container { display: contents; } /* transparent in landscape */
+    }
+
     @media (orientation: portrait) {
       .nav-btn {
         font-size: 15px;
-        width: auto;
-        min-width: 0;
+        width: 100%; /* fill the btn-container width */
         padding-right: 40px;
       }
       #nav-panel {
+        display: flex;
+        flex-direction: column;
+        right: 0; /* full width */
+        align-items: flex-start; /* left-align the btn-container */
+      }
+      /* Container sizes to widest button, all buttons fill it */
+      #nav-btn-container {
         display: inline-flex;
         flex-direction: column;
-        right: auto; /* don't stretch full width */
+        min-width: 0;
+      }
+      #nav-btn-container .nav-btn-row {
+        width: 100%;
       }
     }
 
@@ -686,7 +699,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V68</div>
+    <div id="version">V69</div>
   </div>
 </div>
 
@@ -698,9 +711,11 @@
 
 <!-- Nav panel — direct child of body -->
 <div id="nav-panel">
-  <div class="nav-btn-row"><button class="nav-btn" data-screen="hr">Home Runs</button></div>
-  <div class="nav-btn-row"><button class="nav-btn" data-screen="ops">On-base Plus Slugging</button></div>
-  <div class="nav-btn-row"><button class="nav-btn" data-screen="ws">World Series Challenge</button></div>
+  <div id="nav-btn-container">
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="hr">Home Runs</button></div>
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="ops">On-base Plus Slugging</button></div>
+    <div class="nav-btn-row"><button class="nav-btn" data-screen="ws">World Series Challenge</button></div>
+  </div>
 </div>
 
 <!-- Home plate button — fixed at body level, always on top -->
