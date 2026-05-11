@@ -423,6 +423,7 @@
     @media (orientation: portrait) {
       #nav-panel {
         top: 0; left: 0; right: 0;
+        padding-top: 0;
         padding-left: max(env(safe-area-inset-left), 24px);
         padding-right: max(env(safe-area-inset-right), 24px);
         padding-bottom: 32px;
@@ -430,21 +431,24 @@
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
       #nav-panel.open { transform: translateY(0); }
-      /* Black cover over status bar area so it doesn't turn blue */
-      #nav-panel::before {
-        content: '';
-        display: block;
-        height: env(safe-area-inset-top, 0px);
-        background: #000;
-        margin-left: -24px;
-        margin-right: -24px;
-      }
     }
 
-    /* Nav buttons — match year button style exactly */
-    #nav-panel {
-      gap: 0;
+    /* Black safe-area cover — sits above nav panel in portrait */
+    #safe-area-cover {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: env(safe-area-inset-top, 0px);
+      background: #000;
+      z-index: 101; /* above nav panel z-index 100 */
+      pointer-events: none;
     }
+    @media (orientation: portrait) {
+      #safe-area-cover { display: block; }
+    }
+
+    /* Nav buttons */
+    #nav-panel { gap: 0; }
 
     .nav-btn-row {
       height: 40px;
@@ -475,15 +479,13 @@
       .nav-btn {
         font-size: 15px;
         width: auto;
+        min-width: 0;
         padding-right: 40px;
-        box-sizing: border-box;
-        /* All buttons same width: stretch to widest (World Series Challenge + 40px) */
-        min-width: 100%;
       }
       #nav-panel {
-        /* Shrink panel to content width in portrait */
         display: inline-flex;
         flex-direction: column;
+        right: auto; /* don't stretch full width */
       }
     }
 
@@ -684,9 +686,12 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V66</div>
+    <div id="version">V67</div>
   </div>
 </div>
+
+<!-- Safe area cover for portrait nav -->
+<div id="safe-area-cover"></div>
 
 <!-- Nav backdrop -->
 <div id="nav-overlay"></div>
@@ -868,12 +873,20 @@
 
   function alignNavPanel() {
     const panel = document.getElementById('nav-panel');
-    // Reset any previous inline padding-top so measurement is clean
     panel.style.paddingTop = '';
-    // Use the header-bar bottom as anchor — always stable regardless of screen content
-    const headerBar = document.getElementById('header-bar');
-    const headerBottom = headerBar ? headerBar.getBoundingClientRect().bottom : 80;
-    panel.style.paddingTop = headerBottom + 'px';
+    // Find first data row — try all screen types
+    const firstRow = document.querySelector('#player-list .player-row, #ops-list .ops-row, #ws-list .ws-row');
+    let targetTop;
+    if (firstRow) {
+      targetTop = firstRow.getBoundingClientRect().top;
+    } else {
+      // Fallback: header bottom + 1.5em gap (matching margin-top on lists)
+      const headerBar = document.getElementById('header-bar');
+      const headerBottom = headerBar ? headerBar.getBoundingClientRect().bottom : 80;
+      const fontSize = parseFloat(getComputedStyle(document.body).fontSize) || 16;
+      targetTop = headerBottom + (fontSize * 1.5);
+    }
+    panel.style.paddingTop = Math.max(targetTop, 0) + 'px';
   }
 
   function openNav() {
