@@ -419,7 +419,7 @@
       #nav-panel.open { transform: translateX(0); }
     }
 
-    /* Portrait: slides down from top — safe-area-cover keeps status bar black */
+    /* Portrait: reveals downward using clip-path — no transform, no GPU layer conflict */
     @media (orientation: portrait) {
       #nav-panel {
         top: 0; left: 0; right: 0;
@@ -427,10 +427,13 @@
         padding-left: max(env(safe-area-inset-left), 24px);
         padding-right: max(env(safe-area-inset-right), 24px);
         padding-bottom: 32px;
-        transform: translateY(-100%);
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: none;
+        clip-path: inset(0 0 100% 0);
+        transition: clip-path 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      #nav-panel.open { transform: translateY(0); }
+      #nav-panel.open {
+        clip-path: inset(0 0 0% 0);
+      }
     }
 
     /* Black safe-area cover — same z-index as home-btn, always on top */
@@ -697,7 +700,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V74</div>
+    <div id="version">V75</div>
   </div>
 </div>
 
