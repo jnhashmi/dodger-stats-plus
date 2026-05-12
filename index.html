@@ -378,8 +378,8 @@
       .hr-count { font-size: 15px; min-width: 24px; }
       .ws-year { font-size: 15px; }
       .ws-team { font-size: 15px; }
-      .ops-name { font-size: 15px; width: 130px; min-width: 130px; }
-      .ops-value { font-size: 15px; }
+      .ops-name { font-size: 15px !important; width: 130px; min-width: 130px; }
+      .ops-value { font-size: 15px !important; }
       #ops-bar { left: 130px; }
       #ops-labels { left: 130px; display: none; }
       #portrait-note { display: block; }
@@ -684,7 +684,7 @@
     </div>
 
     <div id="portrait-note">Best in landscape view</div>
-    <div id="version">V86</div>
+    <div id="version">V87</div>
   </div>
 </div>
 
@@ -1518,7 +1518,7 @@
       track.className = 'ops-track';
 
       // Vertical dividers with fine-tuned pixel offsets to align with segment gaps
-      const dividerOffsets = [-2, 5, 10, 20]; // px adjustments per divider
+      const dividerOffsets = [-2, 3, 8, 13]; // updated offsets
       OPS_THRESHOLDS_VALS.forEach((t, i) => {
         const div = document.createElement('div');
         div.className = 'ops-divider';
@@ -1536,7 +1536,7 @@
 
       const valueEl = document.createElement('div');
       valueEl.className = 'ops-value';
-      valueEl.textContent = p.ops > 0 ? p.ops.toFixed(3) : '—';
+      valueEl.textContent = p.ops > 0 ? p.ops.toFixed(3).replace(/^0/, '') : '—';
 
       row.appendChild(nameEl);
       row.appendChild(track);
