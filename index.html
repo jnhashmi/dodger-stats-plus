@@ -710,9 +710,15 @@
 
       /* Scorecard: 500px max, centered, no outer border */
       #vin-grid-wrap {
-        max-width: 350px;
+        width: 350px;
         margin: 16px auto 0;
-        padding-right: 20px; /* horizontal lines extend 20px past right vertical */
+        position: relative;
+      }
+      #vin-grid {
+        width: 350px;
+        border-collapse: collapse;
+        margin-top: 0;
+        table-layout: fixed;
       }
 
       /* Portrait scorecard rows */
@@ -857,7 +863,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version">V118</div>
+    <div id="version">V119</div>
   </div>
 </div>
 
@@ -1945,8 +1951,8 @@
       headerRow.appendChild(thPlayer);
       table.appendChild(headerRow);
 
-      const topH = 84;  // top 2/3 height (was 44 + 40)
-      const botH = 42;  // bottom 1/3 height (was 22 + 20)
+      const topH = 68;  // top 2/3 height
+      const botH = 26;  // bottom 1/3 height
 
       for (let i = 0; i < 6; i++) {
         // Top 2/3 row — speaker icon
@@ -1999,6 +2005,45 @@
       trFoot.appendChild(tdFootNum);
       trFoot.appendChild(tdFootPlayer);
       table.appendChild(trFoot);
+
+      // Add SVG overlay for horizontal line overhangs (20px past right vertical)
+      requestAnimationFrame(() => {
+        const wrap = document.getElementById('vin-grid-wrap');
+        const tbl = document.getElementById('vin-grid');
+        if (!wrap || !tbl) return;
+        const tblRect = tbl.getBoundingClientRect();
+        const wrapRect = wrap.getBoundingClientRect();
+        // Find all border-bottom lines (header + each row bottom)
+        const rows = tbl.querySelectorAll('tr');
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.style.cssText = 'position:absolute;top:0;left:0;width:' + (tblRect.width + 20) + 'px;height:' + tblRect.height + 'px;pointer-events:none;overflow:visible;';
+        const x1 = tblRect.width;
+        const x2 = tblRect.width + 20;
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td, th');
+          if (!cells.length) return;
+          const lastCell = cells[cells.length - 1];
+          const cs = getComputedStyle(lastCell);
+          if (cs.borderBottomWidth !== '0px' && cs.borderBottomStyle !== 'none') {
+            const rowRect = row.getBoundingClientRect();
+            const y = rowRect.bottom - tblRect.top;
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y);
+            line.setAttribute('stroke', '#6e6e6e');
+            line.setAttribute('stroke-width', cs.borderBottomStyle === 'dashed' ? '2' : '1');
+            if (cs.borderBottomStyle === 'dashed') {
+              line.setAttribute('stroke-dasharray', '4,4');
+            }
+            svg.appendChild(line);
+          }
+        });
+        wrap.style.position = 'relative';
+        wrap.appendChild(svg);
+      });
     }
   }
 
