@@ -630,43 +630,9 @@
       margin-left: 11px;
     }
 
-    /* Vin Scully screen */
+
+    /* ── Vin Scully screen — base (no orientation) ── */
     #vin-screen { display: none; }
-
-    /* Vin scorecard grid */
-    #vin-photo {
-      width: 100%;
-      max-width: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center top;
-    }
-
-    #vin-grid {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5em;
-    }
-
-    .vin-header-row th {
-      font-size: 13px;
-      font-weight: 400;
-      color: #6e6e6e;
-      font-family: 'Bricolage Grotesque', sans-serif;
-      border: 1px solid #6e6e6e;
-      padding: 6px 0;
-      text-align: center;
-    }
-
-    .vin-cell {
-      border: 1px solid #6e6e6e;
-      text-align: center;
-      vertical-align: middle;
-      position: relative;
-    }
-
-    .vin-cell.has-clip { cursor: pointer; }
-    .vin-cell.empty { cursor: default; }
 
     .vin-diamond {
       display: inline-flex;
@@ -674,10 +640,11 @@
       justify-content: center;
       position: relative;
     }
-
     .vin-diamond svg { display: block; }
+    .vin-cell.has-clip { cursor: pointer; }
+    .vin-cell.empty { cursor: default; }
 
-    /* Vin mode */
+    /* Vin mode — shared */
     body.vin-mode #year-btn { display: none; }
     body.vin-mode #last-updated { display: none; }
     body.vin-mode #vin-label { display: inline-block; }
@@ -687,20 +654,34 @@
     body.vin-mode #hr-screen { display: none; }
     body.vin-mode #ws-screen { display: none; }
     body.vin-mode #ops-screen { display: none; }
-    body.vin-mode #vin-screen { display: block; }
     body.vin-mode #portrait-note { display: none !important; }
     body.vin-mode #ws-tally { display: none; }
     body.vin-mode #ws-clear-btn { display: none; }
     body.vin-mode #ws-label { display: none; }
     body.vin-mode #ops-label { display: none; }
 
+    /* ── Portrait ── */
     @media (orientation: portrait) {
+      body.vin-mode #vin-screen {
+        display: block;
+      }
       body.vin-mode #dodger-logo { display: none !important; }
       body.vin-mode #vin-label { display: inline-block !important; font-size: 15px !important; margin-left: 0 !important; }
       body.vin-mode #title { display: none; }
 
-      /* Photo: centered, scaled down, top aligned with first HR row */
-      /* Scorecard: 220px, centered, no outer border */
+      /* Photo */
+      #vin-photo-wrap { display: block; }
+      #vin-photo {
+        display: block;
+        width: auto;
+        height: 180px;
+        max-width: calc(100% - 40px);
+        object-fit: cover;
+        object-position: center top;
+        margin: 1.5em auto 0;
+      }
+
+      /* Scorecard */
       #vin-grid-wrap {
         width: 220px;
         max-width: 220px;
@@ -709,77 +690,50 @@
         position: relative;
         overflow: visible;
       }
-      #vin-photo {
-        display: block;
-        width: auto;
-        max-width: calc(100% - 40px);
-        height: auto;
-        margin: 1.5em auto 0;
-      }
       #vin-grid {
         width: 220px;
         border-collapse: collapse;
         margin-top: 0;
         table-layout: fixed;
       }
-
-      /* Portrait scorecard rows */
-      .vin-row-top {
-        border-top: 1px solid #6e6e6e;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-        height: 50px;
-        vertical-align: middle;
-        text-align: center;
-      }
-
-      .vin-row-num {
-        width: 50px;
-        border-top: 1px solid #6e6e6e;
-        border-right: 1px solid #6e6e6e;
-        border-left: none;
-        border-bottom: none;
-        font-size: 13px;
-        color: #6e6e6e;
-        font-family: 'Bricolage Grotesque', sans-serif;
-        text-align: center;
-        vertical-align: middle;
-        height: 50px;
-      }
     }
 
+    /* ── Landscape ── */
     @media (orientation: landscape) {
-      #vin-screen {
-        display: none;
+      body.vin-mode #vin-screen {
+        display: flex;
         flex-direction: row;
         gap: 32px;
         align-items: flex-start;
         padding-top: 1.5em;
       }
-      body.vin-mode #vin-screen { display: flex; }
+
+      /* Photo — same height as portrait (180px), cropped square */
       #vin-photo-wrap {
         flex: 0 0 auto;
         align-self: flex-start;
       }
       #vin-photo {
         display: block;
-        width: auto;
-        height: calc(100vh - 120px); /* fill available height */
-        max-height: 320px;
-        aspect-ratio: 1 / 1;
+        width: 180px;
+        height: 180px;
         object-fit: cover;
         object-position: center top;
+        margin: 0;
       }
+
+      /* Grid fills remaining space */
       #vin-grid-wrap {
         flex: 1;
         min-width: 0;
         position: relative;
+        overflow: visible;
+        margin: 0;
       }
       #vin-grid {
         width: 100%;
-        margin-top: 0;
         border-collapse: collapse;
+        margin-top: 0;
         table-layout: fixed;
       }
     }
@@ -879,7 +833,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V134</div>
+    <div id="version" style="margin-top:40px;">V135</div>
   </div>
 </div>
 
@@ -1920,6 +1874,9 @@
   function buildVinGrid() {
     const table = document.getElementById('vin-grid');
     table.innerHTML = '';
+    // Remove any previous SVG overlay
+    const wrap = document.getElementById('vin-grid-wrap');
+    wrap.querySelectorAll('svg').forEach(s => s.remove());
     const isLandscape = window.innerWidth > window.innerHeight;
 
     if (isLandscape) {
