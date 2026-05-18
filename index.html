@@ -834,7 +834,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V137</div>
+    <div id="version" style="margin-top:40px;">V138</div>
   </div>
 </div>
 
@@ -1992,15 +1992,14 @@
         const yMid = rowYs[1];          // bottom of row 1
         const yBot = rowYs[rowYs.length - 1]; // bottom of row 2
 
-        // Left edge vertical — from top of header, no bleed below bottom
-        vline(xLeft, yHeader, yBot);
-
-        // Right edge vertical — from top of header, bleed below bottom
+        // All vertical lines: from top of header, bleed below bottom row
+        // Left edge
+        vline(xLeft, yHeader, yBot + bleed);
+        // Right edge
         vline(xRight, yHeader, yBot + bleed);
-
-        // Inner column dividers — bleed UP into header, bleed DOWN below bottom
+        // Inner column dividers
         for (let i = 1; i < colXs.length - 1; i++) {
-          vline(colXs[i], yHeader - bleed, yBot + bleed);
+          vline(colXs[i], yHeader, yBot + bleed);
         }
 
         // Header bottom line — from left edge to right+bleed, no left bleed
