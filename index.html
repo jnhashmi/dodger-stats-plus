@@ -675,7 +675,7 @@
         display: block;
         width: auto;
         height: 180px;
-        max-width: calc(100% - 40px);
+        max-width: 100%;
         object-fit: cover;
         object-position: center top;
         margin: 1.5em auto 0;
@@ -722,10 +722,11 @@
         margin: 0;
       }
 
-      /* Grid fills remaining space */
+      /* Grid fills remaining space minus 60px (12px per col) */
       #vin-grid-wrap {
         flex: 1;
         min-width: 0;
+        max-width: calc(100% - 60px);
         position: relative;
         overflow: visible;
         margin: 0;
@@ -833,7 +834,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V135</div>
+    <div id="version" style="margin-top:40px;">V136</div>
   </div>
 </div>
 
@@ -1840,7 +1841,7 @@
     // Speaker body with rounded corners using path
     const body = document.createElementNS(svgNS, 'path');
     body.setAttribute('d', 'M3,10 Q3,8 5,8 L9,8 L15,3 Q16,2 16,4 L16,24 Q16,26 15,25 L9,20 L5,20 Q3,20 3,18 Z');
-    body.setAttribute('fill', '#707070');
+    body.setAttribute('fill', '#ffffff');
     body.setAttribute('stroke', 'none');
     svg.appendChild(body);
 
@@ -1854,7 +1855,7 @@
     const wave1 = document.createElementNS(svgNS, 'path');
     wave1.setAttribute('d', 'M 19,10 A 5,5 0 0,1 19,18');
     wave1.setAttribute('fill', 'none');
-    wave1.setAttribute('stroke', '#707070');
+    wave1.setAttribute('stroke', '#ffffff');
     wave1.setAttribute('stroke-width', '1.8');
     wave1.setAttribute('stroke-linecap', 'round');
     svg.appendChild(wave1);
@@ -1863,7 +1864,7 @@
     const wave2 = document.createElementNS(svgNS, 'path');
     wave2.setAttribute('d', 'M 22,7 A 9,9 0 0,1 22,21');
     wave2.setAttribute('fill', 'none');
-    wave2.setAttribute('stroke', '#707070');
+    wave2.setAttribute('stroke', '#ffffff');
     wave2.setAttribute('stroke-width', '1.8');
     wave2.setAttribute('stroke-linecap', 'round');
     svg.appendChild(wave2);
@@ -1898,7 +1899,8 @@
       const nCols = 5;
       const nRows = 2;
       const headerH = 32;
-      const cellH = 100 + 25; // 50px taller split across rows
+      const cellH = 113; // 125 - 12px
+      const bleed = 10; // overhang amount
 
       // Header row
       const headerRow = document.createElement('tr');
@@ -1935,8 +1937,6 @@
         const tbl = document.getElementById('vin-grid');
         if (!wrap || !tbl) return;
         const tblRect = tbl.getBoundingClientRect();
-        const W = tblRect.width;
-        const H = tblRect.height;
         const svgNS = 'http://www.w3.org/2000/svg';
         const svg = document.createElementNS(svgNS, 'svg');
         svg.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;overflow:visible;';
@@ -1959,36 +1959,45 @@
           svg.appendChild(l);
         }
 
-        // Get column positions from actual rendered cells
-        const headerCells = tbl.querySelectorAll('tr:first-child th');
-        const colXs = [];
+        // Get column X positions from rendered header cells
+        const headerCells = Array.from(tbl.querySelectorAll('tr:first-child th')).slice(1); // skip corner
+        const colXs = []; // left edge of each column
         headerCells.forEach((th, i) => {
-          if (i === 0) return; // skip corner
           const r = th.getBoundingClientRect();
           colXs.push(r.left - tblRect.left);
-          if (i === headerCells.length - 1) colXs.push(r.right - tblRect.left);
+          if (i === headerCells.length - 1) colXs.push(r.right - tblRect.left); // right edge of last col
         });
 
-        // Get row positions
-        const rows = tbl.querySelectorAll('tr');
-        const rowYs = [0];
-        rows.forEach(row => {
-          const r = row.getBoundingClientRect();
-          rowYs.push(r.bottom - tblRect.top);
-        });
+        // Get row Y positions
+        const rows = Array.from(tbl.querySelectorAll('tr'));
+        const rowYs = rows.map(row => row.getBoundingClientRect().bottom - tblRect.top);
+        const topY = rows[0].getBoundingClientRect().top - tblRect.top;
 
-        // Vertical lines — inner only (between columns, not outer edges)
+        const xLeft = colXs[0];         // left edge of col 1
+        const xRight = colXs[colXs.length - 1]; // right edge of col 5
+        const yTop = rowYs[0];          // bottom of header
+        const yMid = rowYs[1];          // between row 1 and 2
+        const yBot = rowYs[rowYs.length - 1]; // bottom of row 2
+
+        // Left edge vertical — no bleed left, bleed right (downward only, from header bottom)
+        vline(xLeft, yTop, yBot + bleed);
+
+        // Right edge vertical — bleed down
+        vline(xRight, yTop, yBot + bleed);
+
+        // Inner column dividers — bleed top and bottom
         for (let i = 1; i < colXs.length - 1; i++) {
-          vline(colXs[i], rowYs[0], rowYs[rowYs.length - 1]);
+          vline(colXs[i], yTop - bleed, yBot + bleed);
         }
 
-        // Horizontal lines — inner only (between rows, not top/bottom edges)
-        // Header bottom line
-        hline(rowYs[1], colXs[0], colXs[colXs.length - 1]);
-        // Row divider
-        if (rowYs.length > 2) {
-          hline(rowYs[2], colXs[0], colXs[colXs.length - 1]);
-        }
+        // Header bottom line — from left edge to right edge (no bleed needed)
+        hline(yTop, xLeft, xRight);
+
+        // Row divider — bleed left and right
+        hline(yMid, xLeft - bleed, xRight + bleed);
+
+        // Bottom edge line — bleed left and right
+        hline(yBot, xLeft - bleed, xRight + bleed);
 
         wrap.style.position = 'relative';
         wrap.appendChild(svg);
