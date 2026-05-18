@@ -834,7 +834,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V139</div>
+    <div id="version" style="margin-top:40px;">V140</div>
   </div>
 </div>
 
@@ -1881,33 +1881,18 @@
     const isLandscape = window.innerWidth > window.innerHeight;
 
     if (isLandscape) {
-      // Landscape: pure SVG grid, no CSS borders
-      // Photo is square — set via JS after render
-      const photo = document.getElementById('vin-photo');
-      if (photo) {
-        const photoWrap = document.getElementById('vin-photo-wrap');
-        requestAnimationFrame(() => {
-          const h = photoWrap ? photoWrap.getBoundingClientRect().height : 200;
-          photo.style.width = h + 'px';
-          photo.style.height = h + 'px';
-          photo.style.objectFit = 'cover';
-          photo.style.objectPosition = 'center top';
-        });
-      }
+      // Photo already sized to 180x180 via CSS — no JS needed
 
       // Build borderless table — 5 cols × 2 rows
       const nCols = 5;
       const nRows = 2;
       const headerH = 32;
-      const cellH = 113; // initial height, will be made square after render
+      const cellH = 113;
       const bleed = 10;
 
-      // Header row
+      // Header row — no corner cell, just 5 numbered columns
       const headerRow = document.createElement('tr');
       headerRow.className = 'vin-header-row';
-      const cornerTh = document.createElement('th');
-      cornerTh.style.cssText = 'border:none;width:0;padding:0;';
-      headerRow.appendChild(cornerTh);
       for (let c = 1; c <= nCols; c++) {
         const th = document.createElement('th');
         th.textContent = c;
@@ -1938,7 +1923,7 @@
         if (!wrap || !tbl) return;
 
         // Make cells square: measure actual column width, set row height to match
-        const firstHeaderCells = Array.from(tbl.querySelectorAll('tr:first-child th')).slice(1);
+        const firstHeaderCells = Array.from(tbl.querySelectorAll('tr:first-child th'));
         if (firstHeaderCells.length > 0) {
           const colW = firstHeaderCells[0].getBoundingClientRect().width;
           tbl.querySelectorAll('tr:not(:first-child) td').forEach(td => {
@@ -1972,7 +1957,7 @@
         }
 
         // Get column X positions from rendered header cells
-        const headerCells = Array.from(tbl.querySelectorAll('tr:first-child th')).slice(1); // skip corner
+        const headerCells = Array.from(tbl.querySelectorAll('tr:first-child th'));
         const colXs = []; // left edge of each column
         headerCells.forEach((th, i) => {
           const r = th.getBoundingClientRect();
@@ -2017,6 +2002,10 @@
       }); // end first rAF
 
     } else {
+      // Portrait — clear any landscape inline photo styles
+      const photo = document.getElementById('vin-photo');
+      if (photo) { photo.style.width = ''; photo.style.height = ''; }
+
       const topH = 47;
       const botH = 23;
       const numColW = 33;
@@ -2164,12 +2153,13 @@
     diamond.setAttribute('stroke-width', sw);
     svg.appendChild(diamond);
 
-    // Base diamonds at 3 corners (1st=right, 2nd=top, 3rd=left) — no home plate (bottom)
-    const baseSize = 6; // half-width of small diamond
+    // Base diamonds at 3 corners — inset so they sit fully inside main diamond
+    const baseSize = 6;
+    const inset = baseSize; // pull inward by baseSize so outer tip aligns with main diamond edge
     const bases = [
-      { cx: 74, cy: 40 }, // 1st base (right)
-      { cx: 40, cy: 6  }, // 2nd base (top)
-      { cx: 6,  cy: 40 }, // 3rd base (left)
+      { cx: 74 - inset, cy: 40 }, // 1st base (right)
+      { cx: 40, cy: 6 + inset  }, // 2nd base (top)
+      { cx: 6 + inset, cy: 40  }, // 3rd base (left)
     ];
     bases.forEach(({ cx, cy }) => {
       const b = document.createElementNS(svgNS, 'polygon');
