@@ -345,12 +345,20 @@
       min-width: 200px;
     }
 
+    .ws-loser-tap {
+      display: none;
+      flex: 1;
+      height: 100%;
+      align-items: center;
+      cursor: pointer;
+      min-height: 40px;
+    }
+
     @media (orientation: landscape) {
       .ws-vs { display: block; }
       .ws-loser { display: block; }
-      .ws-row {
-        position: relative;
-      }
+      .ws-loser-tap { display: flex; }
+      .ws-row { position: relative; }
     }
 
     /* ── Misc ── */
@@ -388,7 +396,7 @@
     @media (orientation: landscape) {
       #dodger-logo { display: inline-block; }
       #home-runs-label { display: inline-block; }
-      body.ws-mode .ws-year { min-width: 140px; width: 140px; } /* shifted left ~50px */
+      body.ws-mode .ws-year { min-width: 140px; width: 140px; }
       body.ws-mode .ws-row {
         display: flex;
         align-items: center;
@@ -402,8 +410,8 @@
         min-width: 60px;
         text-align: center;
       }
-      body.ws-mode .ws-loser {
-        margin-left: 140px; /* ~200px from vs. center */
+      body.ws-mode .ws-loser-tap {
+        margin-left: 140px;
       }
     }
 
@@ -876,7 +884,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V145</div>
+    <div id="version" style="margin-top:40px;">V146</div>
   </div>
 </div>
 
@@ -1178,6 +1186,9 @@
       if (currentScreen === 'vin') {
         buildVinGrid();
       }
+      if (currentScreen === 'ws') {
+        buildWSList();
+      }
     }, 400);
   });
 
@@ -1292,15 +1303,21 @@
           loserEl.textContent = loserData.team;
           loserEl.classList.add('revealed');
         }
+
+        // Tap zone — full size, positioned over loser area
+        const loserTap = document.createElement('div');
+        loserTap.className = 'ws-loser-tap';
+        loserTap.appendChild(loserEl);
+
         if (!wsRevealedLoser[year] && loserData && loserData.team) {
-          loserEl.addEventListener('click', (e) => {
+          loserTap.addEventListener('click', (e) => {
             e.stopPropagation();
             revealWSLoser(year, loserEl, loserData);
           });
         }
 
         row.appendChild(vsEl);
-        row.appendChild(loserEl);
+        row.appendChild(loserTap);
       }
 
       list.appendChild(row);
