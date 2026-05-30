@@ -327,8 +327,10 @@
     }
     .ws-team.revealed { opacity: 1; }
 
-    /* vs. label — landscape only */
-    .ws-vs {
+    .ws-col-label { display: none; }
+    @media (orientation: landscape) {
+      .ws-col-label { display: inline; }
+    }
       display: none;
       font-size: 13px;
       font-weight: 700;
@@ -886,7 +888,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V152</div>
+    <div id="version" style="margin-top:40px;">V153</div>
   </div>
 </div>
 
@@ -1177,8 +1179,6 @@
 
   // Re-align on orientation change
   window.addEventListener('orientationchange', () => {
-    // Build WS list immediately — no delay so headers appear with everything else
-    if (currentScreen === 'ws') buildWSList();
     setTimeout(() => {
       if (document.getElementById('nav-panel').classList.contains('open')) {
         alignNavPanel();
@@ -1190,7 +1190,10 @@
       if (currentScreen === 'vin') {
         buildVinGrid();
       }
-    }, 400);
+      if (currentScreen === 'ws') {
+        buildWSList();
+      }
+    }, 100);
   });
 
   document.getElementById('home-btn').addEventListener('click', () => {
@@ -1272,14 +1275,14 @@
 
     if (isLandscape) {
       const winnerLbl = document.createElement('span');
-      winnerLbl.className = 'ws-col-label';
-      winnerLbl.style.cssText = labelStyle + 'margin-left:16px;';
+      winnerLbl.className = 'ws-col-label ws-winner-lbl';
+      winnerLbl.style.cssText = labelStyle + 'position:absolute;left:140px;';
       winnerLbl.textContent = 'WINNER';
       headerRow.appendChild(winnerLbl);
 
       const loserLbl = document.createElement('span');
-      loserLbl.className = 'ws-col-label';
-      loserLbl.style.cssText = labelStyle + 'position:absolute;left:calc(140px + 220px + 60px + 60px);';
+      loserLbl.className = 'ws-col-label ws-loser-lbl';
+      loserLbl.style.cssText = labelStyle + 'position:absolute;left:480px;';
       loserLbl.textContent = 'LOSER';
       headerRow.appendChild(loserLbl);
     }
