@@ -834,7 +834,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V142</div>
+    <div id="version" style="margin-top:40px;">V143</div>
   </div>
 </div>
 
@@ -910,7 +910,7 @@
     1991: { team: 'Minnesota Twins',        color: '#b92e24' },
     1992: { team: 'Toronto Blue Jays',      color: '#0977cc' },
     1993: { team: 'Toronto Blue Jays',      color: '#0977cc' },
-    1994: { team: "No World Series.", color: '#a6a8ab', noWS: true },
+    1994: { team: "No World Series", color: '#a6a8ab', noWS: true },
     1995: { team: 'Atlanta Braves',         color: '#cc2509' },
     1996: { team: 'New York Yankees',       color: '#a6a8ab' },
     1997: { team: 'Florida Marlins',        color: '#0b9eab' },
@@ -1069,18 +1069,13 @@
         alignNavPanel();
       }
       positionHomeBtn();
-      // Re-align OPS dividers and dots after rotation — use double rAF to ensure layout complete
       if (currentScreen === 'ops') {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            alignOPSDividers();
-          });
-        });
+        requestAnimationFrame(() => requestAnimationFrame(() => alignOPSDividers()));
       }
       if (currentScreen === 'vin') {
         buildVinGrid();
       }
-    }, 300);
+    }, 400);
   });
 
   document.getElementById('home-btn').addEventListener('click', () => {
@@ -1111,6 +1106,9 @@
   function navigateTo(screen) {
     document.body.classList.remove('ws-mode', 'ops-mode', 'vin-mode');
     currentScreen = screen;
+    // Reset scroll on every navigation
+    const app = document.getElementById('app');
+    if (app) app.scrollTop = 0;
     if (screen === 'hr') {
       document.getElementById('last-updated').style.display = '';
       if (loadedHRYear !== selectedYear) loadYear(selectedYear);
@@ -1119,7 +1117,12 @@
       buildWSList();
     } else if (screen === 'ops') {
       document.body.classList.add('ops-mode');
-      if (loadedOPSYear !== selectedYear) loadOPS(selectedYear);
+      if (loadedOPSYear !== selectedYear) {
+        loadOPS(selectedYear);
+      } else {
+        // Always re-align dividers/dots when navigating to OPS
+        requestAnimationFrame(() => requestAnimationFrame(() => alignOPSDividers()));
+      }
     } else if (screen === 'vin') {
       document.body.classList.add('vin-mode');
       buildVinGrid();
