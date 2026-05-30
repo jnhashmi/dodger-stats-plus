@@ -943,7 +943,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V166</div>
+    <div id="version" style="margin-top:40px;">V167</div>
   </div>
 </div>
 
@@ -2661,6 +2661,62 @@
       });
       list.appendChild(row);
     });
+
+    // Draw vertical lines via SVG — same approach as OPS screen
+    requestAnimationFrame(() => {
+      // Remove any existing SVG overlay
+      list.querySelectorAll('.ps-svg-lines').forEach(s => s.remove());
+
+      const listRect = list.getBoundingClientRect();
+      if (!listRect.width) return;
+
+      // Find first data row to measure column positions
+      const firstRow = list.querySelector('.ps-row');
+      if (!firstRow) return;
+      const firstRowRect = firstRow.getBoundingClientRect();
+
+      // Get all cells in first row to measure column boundaries
+      const cells = firstRow.querySelectorAll('.ps-year-cell, .ps-wl-cell, .ps-round-cell');
+      const verticalXs = []; // x positions where vertical lines should go
+
+      cells.forEach((cell, i) => {
+        const r = cell.getBoundingClientRect();
+        const xLeft = r.left - listRect.left;
+        const xRight = r.right - listRect.left;
+        // Line to the right of year cell (between year and W/L) — landscape only
+        if (cell.classList.contains('ps-wl-cell') && isLand) {
+          verticalXs.push({ x: xLeft, type: 'wl-left' });
+          verticalXs.push({ x: xRight, type: 'wl-right' });
+        }
+        // Line to the left of each round cell
+        if (cell.classList.contains('ps-round-cell')) {
+          verticalXs.push({ x: xLeft, type: 'round' });
+        }
+      });
+
+      // Total height = from first data row top to last row bottom
+      const allRows = list.querySelectorAll('.ps-row');
+      const lastRow = allRows[allRows.length - 1];
+      const yTop = firstRowRect.top - listRect.top;
+      const yBot = lastRow.getBoundingClientRect().bottom - listRect.top;
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.className = 'ps-svg-lines';
+      svg.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;overflow:visible;';
+
+      verticalXs.forEach(({ x }) => {
+        const line = document.createElementNS(svgNS, 'line');
+        line.setAttribute('x1', x); line.setAttribute('y1', yTop);
+        line.setAttribute('x2', x); line.setAttribute('y2', yBot);
+        line.setAttribute('stroke', '#6e6e6e');
+        line.setAttribute('stroke-width', '0.5');
+        svg.appendChild(line);
+      });
+
+      list.style.position = 'relative';
+      list.appendChild(svg);
+    });
   }
 
   async function loadPS() {
@@ -2683,8 +2739,8 @@
       .ps-wl-cell { font-family:'Bricolage Grotesque',sans-serif; width:80px; min-width:80px; flex-shrink:0; padding-left:15px; }
       .ps-header-cell.ps-wl-cell { font-size:13px; font-weight:700; color:#6e6e6e; letter-spacing:0.05em; text-transform:uppercase; }
       .ps-row .ps-wl-cell { font-size:13px; font-weight:400; color:#6e6e6e; }
-      .ps-round-cell { display:flex; align-items:center; gap:8px; width:150px; min-width:150px; flex-shrink:0; padding-left:12px; border-left:0.5px solid #6e6e6e; }
-      .ps-header-cell.ps-round-cell { border-left:none !important; padding-left:12px; }
+      .ps-round-cell { display:flex; align-items:center; gap:8px; width:150px; min-width:150px; flex-shrink:0; padding-left:12px; }
+      .ps-header-cell.ps-round-cell { padding-left:12px; }
       .ps-icon { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
       .ps-icon.win { background:#2d7a2d; }
       .ps-icon.loss { background:#cc2509; }
@@ -2693,15 +2749,15 @@
       .ps-opponent { font-size:13px; font-weight:700; color:#6e6e6e; font-family:'Bricolage Grotesque',sans-serif; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; }
       .ps-series { font-size:11px; color:#555; font-family:'Bricolage Grotesque',sans-serif; white-space:nowrap; }
       @media (orientation:landscape) {
-        .ps-wl-cell { border-left:0.5px solid #6e6e6e; border-right:0.5px solid #6e6e6e; padding-right:8px; }
-        .ps-header-cell.ps-wl-cell { border-left:none !important; border-right:none !important; }
+        .ps-wl-cell { padding-right:8px; }
+        .ps-header-cell.ps-wl-cell { }
       }
       @media (orientation:portrait) {
         .ps-result-text { display:none; }
-        .ps-round-cell { width:60px; min-width:60px; justify-content:center; padding-left:0; border-left:0.5px solid #6e6e6e; }
-        .ps-header-cell.ps-round-cell { border-left:none !important; padding-left:0; }
+        .ps-round-cell { width:60px; min-width:60px; justify-content:center; padding-left:0; }
+        .ps-header-cell.ps-round-cell { padding-left:0; }
         .ps-year-cell { width:50px; min-width:50px; font-size:15px; }
-        .ps-wl-cell { width:60px; min-width:60px; font-size:13px; padding-left:0; border-left:none !important; border-right:none !important; }
+        .ps-wl-cell { width:60px; min-width:60px; font-size:13px; padding-left:0; }
       }
     `;
     document.head.appendChild(s);
