@@ -675,6 +675,30 @@
       flex-shrink: 0;
     }
 
+    #vin-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      white-space: nowrap;
+      display: none;
+      margin-left: 11px;
+    }
+
+
+    /* ── Vin Scully screen — base (no orientation) ── */
+    #vin-screen { display: none; }
+
+    .vin-diamond {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .vin-diamond svg { display: block; }
+    .vin-cell.has-clip { cursor: pointer; }
+    .vin-cell.empty { cursor: default; }
+
     #ps-label {
       font-size: 18px;
       font-weight: 700;
@@ -685,19 +709,20 @@
       margin-left: 11px;
     }
 
-    /* ── Postseason screen ── */
-    #ps-screen { display: none; margin-top: calc(1.5em - 40px); }
+    /* ── Postseason screen — hidden by default ── */
+    #ps-screen { display: none; }
 
+    /* ps-mode — explicitly hide ALL other screens and show only ps */
     body.ps-mode #year-btn { display: none; }
     body.ps-mode #last-updated { display: none; }
     body.ps-mode #ps-label { display: inline-block; }
     body.ps-mode #home-runs-label { display: none !important; }
     body.ps-mode #title-text { display: none !important; }
     body.ps-mode #dodger-logo { display: inline-block; }
-    body.ps-mode #hr-screen { display: none; }
-    body.ps-mode #ws-screen { display: none; }
-    body.ps-mode #ops-screen { display: none; }
-    body.ps-mode #vin-screen { display: none; }
+    body.ps-mode #hr-screen { display: none !important; }
+    body.ps-mode #ws-screen { display: none !important; }
+    body.ps-mode #ops-screen { display: none !important; }
+    body.ps-mode #vin-screen { display: none !important; }
     body.ps-mode #ps-screen { display: block; }
     body.ps-mode #portrait-note { display: none !important; }
     body.ps-mode #ws-tally { display: none; }
@@ -712,20 +737,14 @@
       body.ps-mode #title { display: none; }
     }
 
-    /* Postseason table */
-    #ps-list {
-      width: 100%;
-    }
+    /* Postseason table layout */
+    #ps-list { width: 100%; margin-top: calc(1.5em - 40px); }
 
     .ps-header-row {
       display: flex;
       align-items: center;
       height: 40px;
       border-bottom: 0.5px solid #6e6e6e;
-      position: sticky;
-      top: 0;
-      background: #111;
-      z-index: 5;
     }
 
     .ps-header-cell {
@@ -751,6 +770,8 @@
       font-weight: 400;
       color: #fff;
       font-family: 'Bricolage Grotesque', sans-serif;
+      width: 70px;
+      min-width: 70px;
       flex-shrink: 0;
     }
 
@@ -759,6 +780,8 @@
       font-weight: 400;
       color: #6e6e6e;
       font-family: 'Bricolage Grotesque', sans-serif;
+      width: 80px;
+      min-width: 80px;
       flex-shrink: 0;
     }
 
@@ -766,86 +789,41 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      width: 200px;
+      min-width: 200px;
       flex-shrink: 0;
-      overflow: hidden;
     }
 
     .ps-icon {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-
     .ps-icon.win { background: #2d7a2d; }
     .ps-icon.loss { background: #cc2509; }
+    .ps-icon svg { width: 14px; height: 14px; }
 
-    .ps-icon svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .ps-result-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
+    .ps-result-text { display: flex; flex-direction: column; line-height: 1.2; }
     .ps-opponent {
-      font-size: 13px;
-      font-weight: 700;
-      color: #6e6e6e;
+      font-size: 13px; font-weight: 700; color: #6e6e6e;
       font-family: 'Bricolage Grotesque', sans-serif;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      white-space: nowrap;
+      letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
     }
-
     .ps-series {
-      font-size: 11px;
-      color: #555;
-      font-family: 'Bricolage Grotesque', sans-serif;
-      white-space: nowrap;
+      font-size: 11px; color: #555;
+      font-family: 'Bricolage Grotesque', sans-serif; white-space: nowrap;
     }
-
-    /* Column widths */
-    .ps-year-cell  { width: 70px; min-width: 70px; }
-    .ps-wl-cell    { width: 80px; min-width: 80px; }
-    .ps-round-cell { width: 200px; min-width: 200px; }
 
     @media (orientation: portrait) {
-      body.ps-mode .ps-result-text { display: none; }
-      .ps-round-cell { width: 80px; min-width: 80px; justify-content: center; }
-      .ps-year-cell  { width: 55px; min-width: 55px; font-size: 15px; }
-      .ps-wl-cell    { width: 65px; min-width: 65px; font-size: 13px; }
-      .ps-header-cell { font-size: 11px; }
+      .ps-result-text { display: none; }
+      .ps-round-cell { width: 70px; min-width: 70px; justify-content: center; }
+      .ps-year-cell  { width: 50px; min-width: 50px; font-size: 15px; }
+      .ps-wl-cell    { width: 60px; min-width: 60px; font-size: 13px; }
     }
-      font-weight: 700;
-      color: #fff;
-      font-family: 'Bricolage Grotesque', sans-serif;
-      white-space: nowrap;
-      display: none;
-      margin-left: 11px;
-    }
-
-
-    /* ── Vin Scully screen — base (no orientation) ── */
-    #vin-screen { display: none; }
-
-    .vin-diamond {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .vin-diamond svg { display: block; }
-    .vin-cell.has-clip { cursor: pointer; }
-    .vin-cell.empty { cursor: default; }
-
-    /* Vin mode — shared */
     body.vin-mode #year-btn { display: none; }
     body.vin-mode #last-updated { display: none; }
     body.vin-mode #vin-label { display: inline-block; }
@@ -855,6 +833,7 @@
     body.vin-mode #hr-screen { display: none; }
     body.vin-mode #ws-screen { display: none; }
     body.vin-mode #ops-screen { display: none; }
+    body.vin-mode #ps-screen { display: none !important; }
     body.vin-mode #portrait-note { display: none !important; }
     body.vin-mode #ws-tally { display: none; }
     body.vin-mode #ws-clear-btn { display: none; }
@@ -951,6 +930,7 @@
     body.ws-mode #ws-screen { display: block; }
     body.ws-mode #portrait-note { display: none !important; }
     body.ws-mode #ops-screen { display: none; }
+    body.ws-mode #ps-screen { display: none !important; }
 
     /* OPS mode */
     body.ops-mode #year-btn { display: inline-block; }
@@ -962,6 +942,7 @@
     body.ops-mode #hr-screen { display: none; }
     body.ops-mode #ws-screen { display: none; }
     body.ops-mode #ops-screen { display: block; }
+    body.ops-mode #ps-screen { display: none !important; }
     body.ops-mode #portrait-note { display: none; }
     body.ops-mode #ws-tally { display: none; }
     body.ops-mode #ws-clear-btn { display: none; }
@@ -1043,7 +1024,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V155</div>
+    <div id="version" style="margin-top:40px;">V156</div>
   </div>
 </div>
 
@@ -1346,12 +1327,8 @@
       if (currentScreen === 'vin') {
         buildVinGrid();
       }
-      if (currentScreen === 'ws') {
-        buildWSList();
-      }
-      if (currentScreen === 'ps') {
-        renderPSList(PS_YEARS.map(y => psData[y]));
-      }
+      if (currentScreen === 'ws') buildWSList();
+      if (currentScreen === 'ps') renderPSList();
     }, 100);
   });
 
@@ -1393,11 +1370,8 @@
       buildWSList();
     } else if (screen === 'ops') {
       document.body.classList.add('ops-mode');
-      if (loadedOPSYear !== selectedYear) {
-        loadOPS(selectedYear);
-      } else {
-        requestAnimationFrame(() => requestAnimationFrame(() => alignOPSDividers()));
-      }
+      if (loadedOPSYear !== selectedYear) loadOPS(selectedYear);
+      else requestAnimationFrame(() => requestAnimationFrame(() => alignOPSDividers()));
     } else if (screen === 'vin') {
       document.body.classList.add('vin-mode');
       buildVinGrid();
@@ -2633,49 +2607,46 @@
     });
   }
 
-  // ── Postseason screen ──
+  // ── Postseason ──
   const PS_ROUNDS = [
-    { key: 'WC',  labelLand: 'WILD CARD',       labelPort: 'WC'  },
-    { key: 'DS',  labelLand: 'DIVISION SERIES',  labelPort: 'DS'  },
-    { key: 'CS',  labelLand: 'PENNANT',          labelPort: 'PEN' },
-    { key: 'WS',  labelLand: 'WORLD SERIES',     labelPort: 'WS'  },
+    { key: 'WC', land: 'WILD CARD',       port: 'WC'  },
+    { key: 'DS', land: 'DIVISION SERIES', port: 'DS'  },
+    { key: 'CS', land: 'PENNANT',         port: 'PEN' },
+    { key: 'WS', land: 'WORLD SERIES',    port: 'WS'  },
   ];
   const PS_YEARS = [];
-  for (let y = 1969; y <= CURRENT_YEAR; y++) PS_YEARS.push(y);
-  let psData = {};
+  for (let y = 1969; y <= CURRENT_YEAR; y++) { if (y !== 1994) PS_YEARS.push(y); }
+  let psCache = {};
   let psLoaded = false;
 
   function makePSIcon(win) {
     const div = document.createElement('div');
     div.className = 'ps-icon ' + (win ? 'win' : 'loss');
-    const svgNS = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('viewBox', '0 0 16 16');
-    const path = document.createElementNS(svgNS, 'path');
-    if (win) {
-      path.setAttribute('d', 'M2 8 L6 12 L14 4');
-      path.setAttribute('stroke', '#fff');
-      path.setAttribute('stroke-width', '2.5');
-      path.setAttribute('stroke-linecap', 'round');
-      path.setAttribute('stroke-linejoin', 'round');
-      path.setAttribute('fill', 'none');
-    } else {
-      path.setAttribute('d', 'M3 3 L13 13 M13 3 L3 13');
-      path.setAttribute('stroke', '#fff');
-      path.setAttribute('stroke-width', '2.5');
-      path.setAttribute('stroke-linecap', 'round');
-      path.setAttribute('fill', 'none');
-    }
-    svg.appendChild(path);
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 14 14');
+    const p = document.createElementNS(ns, 'path');
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', '#fff');
+    p.setAttribute('stroke-width', '2');
+    p.setAttribute('stroke-linecap', 'round');
+    p.setAttribute('stroke-linejoin', 'round');
+    if (win) p.setAttribute('d', 'M2 7 L5.5 10.5 L12 3.5');
+    else p.setAttribute('d', 'M3 3 L11 11 M11 3 L3 11');
+    svg.appendChild(p);
     div.appendChild(svg);
     return div;
   }
 
   async function fetchPSYear(year) {
     try {
-      // Regular season W/L
-      const recRes = await fetch(`https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=${year}&standingsTypes=regularSeason&hydrate=team`);
+      const [recRes, psRes] = await Promise.all([
+        fetch(`https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=${year}&standingsTypes=regularSeason&hydrate=team`),
+        fetch(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&season=${year}&gameType=F,D,L,W&hydrate=team,seriesSummary,linescore`)
+      ]);
       const recData = await recRes.json();
+      const psSched = await psRes.json();
+
       let wl = '';
       for (const rec of recData.records || []) {
         for (const tr of rec.teamRecords || []) {
@@ -2684,101 +2655,73 @@
         if (wl) break;
       }
 
-      // Postseason games
-      const psRes = await fetch(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&season=${year}&gameType=F,D,L,W&hydrate=team,seriesSummary,linescore`);
-      const psSched = await psRes.json();
       const seriesMap = {};
-
       for (const date of psSched.dates || []) {
         for (const game of date.games || []) {
           const home = game.teams?.home?.team?.id;
           const away = game.teams?.away?.team?.id;
           if (home !== TEAM_ID && away !== TEAM_ID) continue;
           const gt = game.gameType;
-          const roundKey = gt==='F'?'WC':gt==='D'?'DS':gt==='L'?'CS':gt==='W'?'WS':null;
-          if (!roundKey) continue;
-          if (!seriesMap[roundKey]) {
-            const opp = home === TEAM_ID ? game.teams.away?.team?.name : game.teams.home?.team?.name;
-            seriesMap[roundKey] = { opp: opp||'?', wins: 0, losses: 0 };
+          const rk = gt==='F'?'WC':gt==='D'?'DS':gt==='L'?'CS':gt==='W'?'WS':null;
+          if (!rk) continue;
+          if (!seriesMap[rk]) {
+            const opp = home===TEAM_ID ? game.teams.away?.team?.name : game.teams.home?.team?.name;
+            seriesMap[rk] = { opp: opp||'?', wins: 0, losses: 0 };
           }
-          const s = seriesMap[roundKey];
-          const dScore = home===TEAM_ID ? game.teams.home?.score : game.teams.away?.score;
-          const oScore = home===TEAM_ID ? game.teams.away?.score : game.teams.home?.score;
-          if (game.status?.statusCode === 'F' && dScore != null && oScore != null) {
-            if (dScore > oScore) s.wins++; else if (oScore > dScore) s.losses++;
+          const s = seriesMap[rk];
+          const ds = home===TEAM_ID ? game.teams.home?.score : game.teams.away?.score;
+          const os = home===TEAM_ID ? game.teams.away?.score : game.teams.home?.score;
+          if (game.status?.statusCode==='F' && ds!=null && os!=null) {
+            if (ds > os) s.wins++; else if (os > ds) s.losses++;
           }
         }
       }
-
       const rounds = {};
-      for (const [roundKey, s] of Object.entries(seriesMap)) {
-        rounds[roundKey] = {
-          win: s.wins > s.losses,
-          opp: s.opp,
-          series: `${s.wins}-${s.losses}`
-        };
+      for (const [rk, s] of Object.entries(seriesMap)) {
+        rounds[rk] = { win: s.wins>s.losses, opp: s.opp, series: `${s.wins}-${s.losses}` };
       }
       return { wl, rounds };
-    } catch(e) { return { wl: '', rounds: {} }; }
+    } catch(e) { return { wl:'', rounds:{} }; }
   }
 
-  function renderPSList(results) {
+  function renderPSList() {
     const list = document.getElementById('ps-list');
     list.innerHTML = '';
-    const isLandscape = window.innerWidth > window.innerHeight;
+    const isLand = window.innerWidth > window.innerHeight;
 
-    // Header
-    const headerRow = document.createElement('div');
-    headerRow.className = 'ps-header-row';
-    const yearHdr = document.createElement('div');
-    yearHdr.className = 'ps-header-cell ps-year-cell';
-    headerRow.appendChild(yearHdr);
-    const wlHdr = document.createElement('div');
-    wlHdr.className = 'ps-header-cell ps-wl-cell';
-    wlHdr.textContent = 'W/L';
-    headerRow.appendChild(wlHdr);
-    PS_ROUNDS.forEach(r => {
-      const hdr = document.createElement('div');
-      hdr.className = 'ps-header-cell ps-round-cell';
-      hdr.textContent = isLandscape ? r.labelLand : r.labelPort;
-      headerRow.appendChild(hdr);
-    });
-    list.appendChild(headerRow);
+    const hdr = document.createElement('div');
+    hdr.className = 'ps-header-row';
+    const mkHdr = (text, cls) => { const d=document.createElement('div'); d.className='ps-header-cell '+cls; d.textContent=text; hdr.appendChild(d); };
+    mkHdr('', 'ps-year-cell');
+    mkHdr('W/L', 'ps-wl-cell');
+    PS_ROUNDS.forEach(r => mkHdr(isLand ? r.land : r.port, 'ps-round-cell'));
+    list.appendChild(hdr);
 
-    PS_YEARS.forEach((year, i) => {
-      const d = results[i] || { wl: '', rounds: {} };
-      if (year === 1994) return; // skip strike year
+    PS_YEARS.forEach(year => {
+      const d = psCache[year] || { wl:'', rounds:{} };
       const row = document.createElement('div');
       row.className = 'ps-row';
-
-      const yearEl = document.createElement('div');
-      yearEl.className = 'ps-year-cell';
-      yearEl.textContent = year;
-      row.appendChild(yearEl);
-
-      const wlEl = document.createElement('div');
-      wlEl.className = 'ps-wl-cell';
-      wlEl.textContent = d.wl || '—';
-      row.appendChild(wlEl);
-
+      const mkCell = (text, cls) => { const c=document.createElement('div'); c.className=cls; c.textContent=text; row.appendChild(c); };
+      mkCell(year, 'ps-year-cell');
+      mkCell(d.wl||'—', 'ps-wl-cell');
       PS_ROUNDS.forEach(r => {
         const cell = document.createElement('div');
         cell.className = 'ps-round-cell';
         const rd = d.rounds[r.key];
         if (rd) {
           cell.appendChild(makePSIcon(rd.win));
-          if (isLandscape) {
-            const text = document.createElement('div');
-            text.className = 'ps-result-text';
+          if (isLand) {
+            const txt = document.createElement('div');
+            txt.className = 'ps-result-text';
             const opp = document.createElement('div');
             opp.className = 'ps-opponent';
             opp.textContent = rd.opp.split(' ').pop().toUpperCase();
-            const series = document.createElement('div');
-            series.className = 'ps-series';
-            series.textContent = rd.series;
-            text.appendChild(opp);
-            text.appendChild(series);
-            cell.appendChild(text);
+            const ser = document.createElement('div');
+            ser.className = 'ps-series';
+            ser.textContent = rd.series;
+            txt.appendChild(opp);
+            txt.appendChild(ser);
+            cell.appendChild(txt);
           }
         }
         row.appendChild(cell);
@@ -2788,11 +2731,12 @@
   }
 
   async function loadPS() {
-    if (psLoaded) { renderPSList(PS_YEARS.map(y => psData[y])); return; }
-    document.getElementById('ps-list').innerHTML = '<div style="color:#6e6e6e;font-family:Bricolage Grotesque,sans-serif;font-size:15px;padding:24px;">Loading…</div>';
-    const results = await Promise.all(PS_YEARS.map(y => fetchPSYear(y).then(d => { psData[y] = d; return d; })));
-    psLoaded = true;
-    renderPSList(results);
+    if (!psLoaded) {
+      document.getElementById('ps-list').innerHTML = '<div style="color:#6e6e6e;font-family:Bricolage Grotesque,sans-serif;font-size:15px;padding:24px 0;">Loading…</div>';
+      await Promise.all(PS_YEARS.map(y => fetchPSYear(y).then(d => { psCache[y]=d; })));
+      psLoaded = true;
+    }
+    renderPSList();
   }
 
   document.getElementById('year-btn').textContent = CURRENT_YEAR;
