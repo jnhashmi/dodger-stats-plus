@@ -943,7 +943,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V168</div>
+    <div id="version" style="margin-top:40px;">V169</div>
   </div>
 </div>
 
@@ -2647,56 +2647,44 @@
       list.appendChild(row);
     });
 
-    // Draw vertical lines via SVG — same approach as OPS screen
+    // Draw vertical lines via SVG with 3px inset — same as OPS dividers
     requestAnimationFrame(() => {
-      // Remove any existing SVG overlay
       const psScreen = document.getElementById('ps-screen');
       psScreen.querySelectorAll('.ps-svg-lines').forEach(s => s.remove());
 
-      const listRect = list.getBoundingClientRect();
       const screenRect = psScreen.getBoundingClientRect();
-      if (!listRect.width) return;
-
       const firstRow = list.querySelector('.ps-row');
       if (!firstRow) return;
-      const firstRowRect = firstRow.getBoundingClientRect();
       const allRows = list.querySelectorAll('.ps-row');
       const lastRow = allRows[allRows.length - 1];
 
+      // Measure column positions from first data row
       const cells = firstRow.querySelectorAll('div');
       const verticalXs = [];
       cells.forEach(cell => {
         const r = cell.getBoundingClientRect();
         const xLeft = r.left - screenRect.left;
         if (cell.classList.contains('ps-wl-cell') && isLand) {
-          verticalXs.push(xLeft); // left of W/L
-          verticalXs.push(r.right - screenRect.left); // right of W/L
+          verticalXs.push(xLeft);
+          verticalXs.push(r.right - screenRect.left);
         }
         if (cell.classList.contains('ps-round-cell')) {
           verticalXs.push(xLeft);
         }
       });
 
-      const yTop = firstRowRect.top - screenRect.top + 3; // 3px gap from row top
-      const yBot = lastRow.getBoundingClientRect().bottom - screenRect.top - 3; // 3px gap from row bottom
-      const hdrBottom = firstRowRect.top - screenRect.top; // header bottom line y
+      if (!verticalXs.length) return;
+
+      // Vertical lines span all data rows with 3px inset top and bottom per row
+      // = from (first row top + 3px) to (last row bottom - 3px)
+      const yTop = firstRow.getBoundingClientRect().top - screenRect.top + 3;
+      const yBot = lastRow.getBoundingClientRect().bottom - screenRect.top - 3;
 
       const svgNS = 'http://www.w3.org/2000/svg';
       const svg = document.createElementNS(svgNS, 'svg');
       svg.className = 'ps-svg-lines';
       svg.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;pointer-events:none;overflow:visible;z-index:1;';
 
-      // Header bottom line (replaces CSS border-bottom on header row)
-      const hdrLine = document.createElementNS(svgNS, 'line');
-      hdrLine.setAttribute('x1', 0);
-      hdrLine.setAttribute('y1', hdrBottom);
-      hdrLine.setAttribute('x2', listRect.width);
-      hdrLine.setAttribute('y2', hdrBottom);
-      hdrLine.setAttribute('stroke', '#6e6e6e');
-      hdrLine.setAttribute('stroke-width', '0.5');
-      svg.appendChild(hdrLine);
-
-      // Vertical lines — start at first row top, end at last row bottom, with 3px gaps
       verticalXs.forEach(x => {
         const line = document.createElementNS(svgNS, 'line');
         line.setAttribute('x1', x); line.setAttribute('y1', yTop);
@@ -2724,10 +2712,9 @@
   (function() {
     const s = document.createElement('style');
     s.textContent = `
-      .ps-header-row { display:flex; align-items:flex-end; height:45px; padding-bottom:5px; }
+      .ps-header-row { display:flex; align-items:flex-end; height:45px; padding-bottom:5px; border-bottom:0.5px solid #6e6e6e; }
       .ps-header-cell { font-size:13px; font-weight:700; color:#6e6e6e; font-family:'Bricolage Grotesque',sans-serif; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; flex-shrink:0; }
-      .ps-row { display:flex; align-items:center; height:40px; border-bottom:0.5px solid #6e6e6e; border-top:none; position:relative; }
-      .ps-row:first-child { border-top: none; }
+      .ps-row { display:flex; align-items:center; height:40px; border-bottom:0.5px solid #6e6e6e; border-top:none !important; }
       .ps-year-cell { font-size:18px; font-weight:400; color:#fff; font-family:'Bricolage Grotesque',sans-serif; width:70px; min-width:70px; flex-shrink:0; }
       .ps-wl-cell { font-family:'Bricolage Grotesque',sans-serif; width:80px; min-width:80px; flex-shrink:0; padding-left:15px; }
       .ps-header-cell.ps-wl-cell { font-size:13px; font-weight:700; color:#6e6e6e; letter-spacing:0.05em; text-transform:uppercase; }
@@ -2741,13 +2728,11 @@
       .ps-result-text { display:flex; flex-direction:column; line-height:1.2; }
       .ps-opponent { font-size:13px; font-weight:700; color:#6e6e6e; font-family:'Bricolage Grotesque',sans-serif; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; }
       .ps-series { font-size:11px; color:#555; font-family:'Bricolage Grotesque',sans-serif; white-space:nowrap; }
-      @media (orientation:landscape) {
-        .ps-wl-cell { padding-right:8px; }
-      }
+      @media (orientation:landscape) { .ps-wl-cell { padding-right:8px; } }
       @media (orientation:portrait) {
         .ps-result-text { display:none; }
         .ps-round-cell { width:60px; min-width:60px; padding-left:4px; justify-content:flex-start; }
-        .ps-header-cell.ps-round-cell { padding-left:4px; justify-content:flex-start; }
+        .ps-header-cell.ps-round-cell { padding-left:4px; }
         .ps-year-cell { width:50px; min-width:50px; font-size:15px; }
         .ps-wl-cell { width:60px; min-width:60px; font-size:13px; padding-left:0; }
       }
