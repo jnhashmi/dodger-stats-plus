@@ -862,7 +862,7 @@
 
     <!-- World Series Screen -->
     <div id="ws-screen" style="margin-top: calc(1.5em - 40px); position: relative;">
-      <div id="ws-tap-reveal" style="position:absolute;top:14px;left:0;right:0;font-size:13px;font-weight:700;font-family:'Bricolage Grotesque',sans-serif;color:#6e6e6e;letter-spacing:0.08em;text-transform:uppercase;height:40px;display:flex;align-items:center;">TAP TO REVEAL</div>
+      <div id="ws-header-row" style="position:absolute;top:14px;left:0;right:0;height:40px;display:flex;align-items:center;"></div>
       <div id="ws-list" style="padding-top:40px;"></div>
     </div>
 
@@ -884,7 +884,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V150</div>
+    <div id="version" style="margin-top:40px;">V151</div>
   </div>
 </div>
 
@@ -1261,6 +1261,30 @@
     const list = document.getElementById('ws-list');
     list.innerHTML = '';
     const isLandscape = window.innerWidth > window.innerHeight;
+
+    // Build header row
+    const headerRow = document.getElementById('ws-header-row');
+    headerRow.innerHTML = '';
+    const labelStyle = 'font-size:13px;font-weight:700;font-family:Bricolage Grotesque,sans-serif;color:#6e6e6e;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;';
+
+    if (isLandscape) {
+      // WINNER left-justified, LOSER positioned to match loser column
+      const winnerLbl = document.createElement('span');
+      winnerLbl.style.cssText = labelStyle;
+      winnerLbl.textContent = 'WINNER';
+
+      const loserLbl = document.createElement('span');
+      loserLbl.style.cssText = labelStyle + 'position:absolute;left:calc(140px + 220px + 60px + 60px);';
+      loserLbl.textContent = 'LOSER';
+
+      headerRow.appendChild(winnerLbl);
+      headerRow.appendChild(loserLbl);
+    } else {
+      const tapLbl = document.createElement('span');
+      tapLbl.style.cssText = labelStyle;
+      tapLbl.textContent = 'TAP TO REVEAL';
+      headerRow.appendChild(tapLbl);
+    }
 
     WS_YEARS.forEach(year => {
       const data = WS_WINNERS[year];
