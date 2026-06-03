@@ -905,7 +905,7 @@
     }
 
     #avg-screen { display: none; }
-    #avg-list { width: 100%; border: none; }
+    #avg-list { width: 100%; }
 
     body.avg-mode #year-btn { display: inline-block; }
     body.avg-mode #last-updated { display: none; }
@@ -955,7 +955,7 @@
     }
     .avg-row {
       display: flex; align-items: center; height: 40px;
-      border-bottom: 0.5px solid #6e6e6e;
+      border-bottom: 0.5px solid #6e6e6e; border-top: none;
       position: relative;
     }
     .avg-name-cell {
@@ -1075,7 +1075,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V196</div>
+    <div id="version" style="margin-top:40px;">V197</div>
   </div>
 </div>
 
@@ -2982,7 +2982,6 @@
     avgData.forEach((p, idx) => {
       const row = document.createElement('div');
       row.className = 'avg-row';
-      if (idx === 0) row.style.borderTop = '0.5px solid #6e6e6e';
 
       const nameEl = document.createElement('div');
       nameEl.className = 'avg-name-cell';
