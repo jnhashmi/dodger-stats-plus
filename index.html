@@ -960,18 +960,18 @@
     .avg-name-cell {
       font-size: 18px; font-weight: 400; color: #fff;
       font-family: 'Bricolage Grotesque', sans-serif;
-      width: 190px; min-width: 190px; flex-shrink: 0;
+      width: 210px; min-width: 210px; flex-shrink: 0;
     }
     .avg-stat-cell {
       display: flex; align-items: center; gap: 4px;
       flex: 1; flex-shrink: 0;
-      padding-left: 10px; /* ~1 number width of padding */
+      padding-left: 10px;
     }
     .avg-arrow {
-      font-size: 17px; /* match number size */
+      font-size: 19px;
       flex-shrink: 0;
       position: relative;
-      top: -1px; /* bump up 1px */
+      top: 3px;
       line-height: 1;
     }
     .avg-arrow.up { color: #2d7a2d; }
@@ -1074,7 +1074,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V190</div>
+    <div id="version" style="margin-top:40px;">V191</div>
   </div>
 </div>
 
@@ -2966,7 +2966,7 @@
     const hdr = document.createElement('div');
     hdr.className = 'avg-header-row';
     const nameHdr = document.createElement('div');
-    nameHdr.style.cssText = 'width:' + (isLand ? '190' : '130') + 'px;min-width:' + (isLand ? '190' : '130') + 'px;flex-shrink:0;';
+    nameHdr.style.cssText = 'width:' + (isLand ? '210' : '130') + 'px;min-width:' + (isLand ? '210' : '130') + 'px;flex-shrink:0;';
     hdr.appendChild(nameHdr);
     AVG_COLS.forEach(col => {
       const cell = document.createElement('div');
