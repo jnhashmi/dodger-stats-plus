@@ -1075,7 +1075,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V201</div>
+    <div id="version" style="margin-top:40px;">V202</div>
   </div>
 </div>
 
@@ -1894,7 +1894,7 @@
       .filter(p => {
         if (p.name === 'Shohei Ohtani') return true;
         if (p.pos === 'P') return p.hr >= 1;
-        return p.pa >= 1; // at least 1 plate appearance
+        return p.ab >= 10; // at least 10 at bats
       });
 
     // Only fetch prior year stats for current year
@@ -2048,7 +2048,7 @@
       .filter(p => {
         if (p.name === 'Shohei Ohtani') return true;
         if (p.pos === 'P') return false;
-        return p.pa >= 1;
+        return p.ab >= 10;
       })
       .sort((a, b) => b.ops - a.ops);
   }
@@ -2906,10 +2906,10 @@
         const name = p.person?.fullName;
         const pos = p.position?.abbreviation;
         const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
-        const pa = parseInt(stat?.plateAppearances) || 0;
+        const ab = parseInt(stat?.atBats) || 0;
         if (name === 'Shohei Ohtani') { validIds.add(p.person.id); continue; }
         if (pos === 'P') continue;
-        if (pa >= 1) validIds.add(p.person.id);
+        if (ab >= 10) validIds.add(p.person.id);
       }
 
       // Build base map from season stats
