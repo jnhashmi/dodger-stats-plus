@@ -1075,7 +1075,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V200</div>
+    <div id="version" style="margin-top:40px;">V201</div>
   </div>
 </div>
 
@@ -1874,7 +1874,7 @@
     const priorDateStr = `${month}/${day}/${priorYear}`;
 
     // Fetch current year roster with hitting stats
-    const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
+    const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=40Man&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
@@ -1886,13 +1886,15 @@
           name: p.person?.fullName || 'Unknown',
           id: p.person?.id,
           hr: stat?.homeRuns ?? 0,
-          pos: p.position?.abbreviation || ''
+          pos: p.position?.abbreviation || '',
+          ab: parseInt(stat?.atBats) || 0,
+          pa: parseInt(stat?.plateAppearances) || 0,
         };
       })
       .filter(p => {
         if (p.name === 'Shohei Ohtani') return true;
         if (p.pos === 'P') return p.hr >= 1;
-        return true;
+        return p.pa >= 1; // at least 1 plate appearance
       });
 
     // Only fetch prior year stats for current year
@@ -2024,7 +2026,7 @@
   }
 
   async function fetchOPS(year) {
-    const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
+    const url = `https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=40Man&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
@@ -2039,13 +2041,14 @@
           name: p.person?.fullName || 'Unknown',
           ops,
           pos: p.position?.abbreviation || '',
-          ab: parseInt(stat?.atBats) || 0
+          ab: parseInt(stat?.atBats) || 0,
+          pa: parseInt(stat?.plateAppearances) || 0,
         };
       })
       .filter(p => {
         if (p.name === 'Shohei Ohtani') return true;
         if (p.pos === 'P') return false;
-        return p.ab >= 10;
+        return p.pa >= 1;
       })
       .sort((a, b) => b.ops - a.ops);
   }
@@ -2894,7 +2897,7 @@
     document.getElementById('avg-list').innerHTML = '<div style="color:#797878;font-family:\'Bricolage Grotesque\',sans-serif;font-size:15px;padding:24px 0;">Loading…</div>';
     try {
       // Roster with season stats
-      const rosterRes = await fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`);
+      const rosterRes = await fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=40Man&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`);
       const rosterData = await rosterRes.json();
 
       // Build valid player set (position players + Ohtani, 10+ AB)
@@ -2903,10 +2906,10 @@
         const name = p.person?.fullName;
         const pos = p.position?.abbreviation;
         const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
-        const ab = parseInt(stat?.atBats) || 0;
+        const pa = parseInt(stat?.plateAppearances) || 0;
         if (name === 'Shohei Ohtani') { validIds.add(p.person.id); continue; }
         if (pos === 'P') continue;
-        if (ab >= 10) validIds.add(p.person.id);
+        if (pa >= 1) validIds.add(p.person.id);
       }
 
       // Build base map from season stats
