@@ -1075,7 +1075,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V195-DEBUG</div>
+    <div id="version" style="margin-top:40px;">V196</div>
   </div>
 </div>
 
@@ -2983,6 +2983,9 @@
       const row = document.createElement('div');
       row.className = 'avg-row';
       if (idx === 0) row.style.borderTop = '0.5px solid #6e6e6e';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'avg-name-cell';
       nameEl.textContent = p.name;
       row.appendChild(nameEl);
 
