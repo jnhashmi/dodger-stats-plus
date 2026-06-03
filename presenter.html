@@ -114,6 +114,11 @@
       width: calc(100% - 60px);
       height: 100%;
       border-radius: 44px 0 0 44px;
+      /* Scale content down slightly so WS challenge fits without clipping */
+      transform-origin: top left;
+      transform: scale(0.82);
+      width: calc((100% - 60px) / 0.82);
+      height: calc(100% / 0.82);
     }
 
     /* ── Buttons ── */
