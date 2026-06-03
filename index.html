@@ -1069,7 +1069,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V182</div>
+    <div id="version" style="margin-top:40px;">V183</div>
   </div>
 </div>
 
@@ -1299,6 +1299,8 @@
     document.getElementById('last-updated').style.display = 'none';
     if (currentScreen === 'ops') {
       loadOPS(y);
+    } else if (currentScreen === 'avg') {
+      loadAvg(y);
     } else {
       loadYear(y);
     }
@@ -2885,51 +2887,70 @@
   async function loadAvg(year) {
     document.getElementById('avg-list').innerHTML = '<div style="color:#797878;font-family:\'Bricolage Grotesque\',sans-serif;font-size:15px;padding:24px 0;">Loading…</div>';
     try {
-      const [rosterRes, seasonRes, splitRes, careerRes] = await Promise.all([
-        fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person`),
-        fetch(`https://statsapi.mlb.com/api/v1/stats?stats=season&group=hitting&season=${year}&teamId=${TEAM_ID}&hydrate=person`),
-        fetch(`https://statsapi.mlb.com/api/v1/stats?stats=statSplits&sitCodes=risp,risp2out&group=hitting&season=${year}&teamId=${TEAM_ID}&hydrate=person`),
-        fetch(`https://statsapi.mlb.com/api/v1/stats?stats=career&group=hitting&teamId=${TEAM_ID}&hydrate=person`),
+      // Use same roster hydration as OPS — gets all players with season stats
+      const [rosterRes, rispRes, careerRes] = await Promise.all([
+        fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=season,season=${year},group=hitting))`),
+        fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=statSplits,sitCodes=risp,risp2out,season=${year},group=hitting))`),
+        fetch(`https://statsapi.mlb.com/api/v1/teams/${TEAM_ID}/roster?rosterType=active&season=${year}&hydrate=person(stats(type=career,group=hitting))`),
       ]);
-      const [rosterData, seasonData, splitData, careerData] = await Promise.all([
-        rosterRes.json(), seasonRes.json(), splitRes.json(), careerRes.json()
+      const [rosterData, rispData, careerData] = await Promise.all([
+        rosterRes.json(), rispRes.json(), careerRes.json()
       ]);
 
-      // Position players + Ohtani
-      const validIds = new Set((rosterData.roster || [])
-        .filter(p => p.position?.abbreviation !== 'P' || p.person?.id === 660271)
-        .map(p => p.person.id));
-
-      // Build map from season stats
-      const map = {};
-      for (const sp of seasonData.stats?.[0]?.splits || []) {
-        const id = sp.player?.id;
-        if (!id || !validIds.has(id)) continue;
-        map[id] = { name: sp.player.fullName, avg: parseFloat(sp.stat?.avg) || null, risp: null, risp2out: null, career: null };
-      }
-
-      // RISP splits
-      for (const group of splitData.stats || []) {
-        for (const sp of group.splits || []) {
-          const id = sp.player?.id;
-          if (!id || !map[id]) continue;
-          const code = sp.split?.code;
-          if (code === 'risp') map[id].risp = parseFloat(sp.stat?.avg) ?? null;
-          if (code === 'risp2out') map[id].risp2out = parseFloat(sp.stat?.avg) ?? null;
+      // Build RISP map from risp hydrated roster
+      const rispMap = {};
+      for (const p of rispData.roster || []) {
+        const id = p.person?.id;
+        if (!id) continue;
+        rispMap[id] = { risp: null, risp2out: null };
+        for (const statGroup of p.person?.stats || []) {
+          for (const split of statGroup.splits || []) {
+            const code = split.split?.code;
+            const avg = parseFloat(split.stat?.avg);
+            if (code === 'risp' && !isNaN(avg)) rispMap[id].risp = avg;
+            if (code === 'risp2out' && !isNaN(avg)) rispMap[id].risp2out = avg;
+          }
         }
       }
 
-      // Career
-      for (const sp of careerData.stats?.[0]?.splits || []) {
-        const id = sp.player?.id;
-        if (!id || !map[id]) continue;
-        map[id].career = parseFloat(sp.stat?.avg) ?? null;
+      // Build career map
+      const careerMap = {};
+      for (const p of careerData.roster || []) {
+        const id = p.person?.id;
+        if (!id) continue;
+        const avg = parseFloat(p.person?.stats?.[0]?.splits?.[0]?.stat?.avg);
+        if (!isNaN(avg)) careerMap[id] = avg;
       }
 
-      avgData = Object.values(map).filter(p => p.avg !== null).sort((a, b) => (b.avg || 0) - (a.avg || 0));
+      // Build final player list from season roster
+      avgData = (rosterData.roster || [])
+        .map(p => {
+          const id = p.person?.id;
+          const stat = p.person?.stats?.[0]?.splits?.[0]?.stat;
+          const avg = parseFloat(stat?.avg);
+          const ab = parseInt(stat?.atBats) || 0;
+          return {
+            id,
+            name: p.person?.fullName || '',
+            pos: p.position?.abbreviation || '',
+            avg: isNaN(avg) ? null : avg,
+            ab,
+            risp: rispMap[id]?.risp ?? null,
+            risp2out: rispMap[id]?.risp2out ?? null,
+            career: careerMap[id] ?? null,
+          };
+        })
+        .filter(p => {
+          if (p.name === 'Shohei Ohtani') return true;
+          if (p.pos === 'P') return false;
+          return p.avg !== null && p.ab >= 10;
+        })
+        .sort((a, b) => (b.avg || 0) - (a.avg || 0));
+
       loadedAvgYear = year;
       renderAvgList();
     } catch(e) {
+      console.error('loadAvg error:', e);
       document.getElementById('avg-list').innerHTML = '<div style="color:#797878;font-family:\'Bricolage Grotesque\',sans-serif;font-size:15px;padding:24px 0;">Error loading data</div>';
     }
   }
