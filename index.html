@@ -601,7 +601,7 @@
     }
 
     #ops-list {
-      padding-top: 40px;
+      padding-top: 55px; /* 40px for scale + 15px to compensate negative margin */
       margin-top: 0;
     }
 
@@ -1076,7 +1076,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V213</div>
+    <div id="version" style="margin-top:40px;">V214</div>
   </div>
 </div>
 
@@ -2067,8 +2067,7 @@
     const headerBar = document.getElementById('header-bar');
     const scale = document.getElementById('ops-scale');
     if (headerBar && scale) {
-      const headerH = headerBar.getBoundingClientRect().height;
-      scale.style.top = headerH + 'px';
+      scale.style.top = headerBar.getBoundingClientRect().height + 'px';
     }
   }
 
