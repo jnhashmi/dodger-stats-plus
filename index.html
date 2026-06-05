@@ -1077,7 +1077,7 @@
         <table id="vin-grid"></table>
       </div>
     </div>
-    <div id="version" style="margin-top:40px;">V217</div>
+    <div id="version" style="margin-top:40px;">V218</div>
   </div>
 </div>
 
@@ -2995,9 +2995,8 @@
     const isLand = window.innerWidth > window.innerHeight;
     const avgScreen = document.getElementById('avg-screen');
 
-    // Header — absolutely positioned
+    // Header — sticky
     avgScreen.querySelectorAll('.avg-header-row').forEach(h => h.remove());
-    list.insertBefore(hdr, list.firstChild);
     const hdr = document.createElement('div');
     hdr.className = 'avg-header-row';
     const nameHdr = document.createElement('div');
@@ -3010,6 +3009,7 @@
       cell.textContent = isLand ? col.labelLand : col.labelPort;
       hdr.appendChild(cell);
     });
+    list.appendChild(hdr);
 
     // Rows
     avgData.forEach((p, idx) => {
