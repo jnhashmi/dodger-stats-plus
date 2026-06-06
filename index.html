@@ -1103,7 +1103,7 @@
       </div>
     </div>
     <div id="portrait-note">Best viewed in landscape</div>
-    <div id="version">V225</div>
+    <div id="version">V226</div>
   </div>
 </div>
 
@@ -1234,7 +1234,7 @@
     1979: { team: 'Baltimore Orioles',      color: '#e36a30' },
     1980: { team: 'Kansas City Royals',     color: '#0f65ff' },
     1981: { team: 'New York Yankees',       color: '#a6a8ab' },
-    1982: { team: 'Milwaukee Brewers',      color: '#0b5c2a' },
+    1982: { team: 'Milwaukee Brewers',      color: '#e3aa30' },
     1983: { team: 'Philadelphia Phillies',  color: '#cc2509' },
     1984: { team: 'San Diego Padres',       color: '#e3aa30' },
     1985: { team: 'St. Louis Cardinals',    color: '#b92e24' },
@@ -1260,7 +1260,7 @@
     2005: { team: 'Houston Astros',         color: '#cc6909' },
     2006: { team: 'Detroit Tigers',         color: '#0f65ff' },
     2007: { team: 'Colorado Rockies',       color: '#8b5cf6' },
-    2008: { team: 'Tampa Bay Rays',         color: '#0f65ff' },
+    2008: { team: 'Tampa Bay Rays',         color: '#94a9d7' },
     2009: { team: 'Philadelphia Phillies',  color: '#cc2509' },
     2010: { team: 'Texas Rangers',          color: '#0f65ff' },
     2011: { team: 'Texas Rangers',          color: '#0f65ff' },
@@ -1272,7 +1272,7 @@
     2017: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
     2018: { team: 'Los Angeles Dodgers',    color: '#0977cc' },
     2019: { team: 'Houston Astros',         color: '#cc6909' },
-    2020: { team: 'Tampa Bay Rays',         color: '#0f65ff' },
+    2020: { team: 'Tampa Bay Rays',         color: '#94a9d7' },
     2021: { team: 'Houston Astros',         color: '#cc6909' },
     2022: { team: 'Philadelphia Phillies',  color: '#cc2509' },
     2023: { team: 'Arizona Diamondbacks',   color: '#9939ff' },
@@ -2853,6 +2853,7 @@
             opp.className = 'ps-opponent';
             const shortNames = {
               'Diamondbacks': "D'Backs",
+              'Sox': 'Red Sox',
             };
             const lastName = rd.opp.split(' ').pop();
             opp.textContent = (shortNames[lastName] || lastName).toUpperCase();
@@ -2956,6 +2957,7 @@
   ];
   let avgData = null;
   let loadedAvgYear = null;
+  let avgSortMode = 'most';
 
   function fmtAvg(val) {
     if (val === null || val === undefined || isNaN(val)) return '—';
@@ -3021,6 +3023,7 @@
 
       avgData = Object.values(map).filter(p => p.avg !== null).sort((a,b) => (b.avg||0)-(a.avg||0));
       loadedAvgYear = year;
+      avgSortMode = 'most';
       renderAvgList();
     } catch(e) {
       document.getElementById('avg-list').innerHTML = '<div style="color:#797878;font-family:\'Bricolage Grotesque\',sans-serif;font-size:15px;padding:24px 0;">Error: ' + e.message + '</div>';
@@ -3100,6 +3103,46 @@
         });
       });
       setAvgHeaderTop();
+
+      // Tap name to toggle sort
+      list.querySelectorAll('.avg-name-cell').forEach(nameEl => {
+        nameEl.style.cursor = 'pointer';
+        nameEl.addEventListener('click', () => {
+          avgSortMode = avgSortMode === 'most' ? 'alpha' : 'most';
+          const sorted = avgSortMode === 'most'
+            ? [...avgData].sort((a,b) => (b.avg||0)-(a.avg||0))
+            : [...avgData].sort((a,b) => a.name.localeCompare(b.name));
+
+          // FLIP animation
+          const rows = Array.from(list.querySelectorAll('.avg-row'));
+          const oldPositions = {};
+          rows.forEach(r => {
+            const name = r.querySelector('.avg-name-cell')?.textContent;
+            if (name) oldPositions[name] = r.getBoundingClientRect().top;
+          });
+
+          avgData = sorted;
+          renderAvgList();
+
+          requestAnimationFrame(() => {
+            list.querySelectorAll('.avg-row').forEach(r => {
+              const name = r.querySelector('.avg-name-cell')?.textContent;
+              if (name && oldPositions[name] !== undefined) {
+                const newTop = r.getBoundingClientRect().top;
+                const delta = oldPositions[name] - newTop;
+                if (delta !== 0) {
+                  r.style.transition = 'none';
+                  r.style.transform = `translateY(${delta}px)`;
+                  requestAnimationFrame(() => {
+                    r.style.transition = 'transform 0.3s ease';
+                    r.style.transform = 'translateY(0)';
+                  });
+                }
+              }
+            });
+          });
+        });
+      });
     });
   }
 
