@@ -199,5 +199,73 @@
 
   <div class="label">Live Data</div>
 
+  <script>
+    const frame = document.querySelector('.app-frame');
+    const bezel = document.querySelector('.screen-bezel');
+
+    // Make iframe scrollable
+    frame.removeAttribute('scrolling');
+    frame.style.overflow = 'auto';
+
+    // Overlay for drag detection only — transparent to clicks normally
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;cursor:grab;border-radius:44px;pointer-events:none;';
+    bezel.style.position = 'relative';
+    bezel.appendChild(overlay);
+
+    let isDragging = false;
+    let startY = 0;
+    let lastY = 0;
+    let velocity = 0;
+    let lastTime = 0;
+    let momentumTimer = null;
+
+    // Enable overlay only on mousedown
+    bezel.addEventListener('mousedown', e => {
+      isDragging = true;
+      startY = e.clientY;
+      lastY = e.clientY;
+      lastTime = Date.now();
+      velocity = 0;
+      overlay.style.pointerEvents = 'all'; // block iframe during drag
+      overlay.style.cursor = 'grabbing';
+      if (momentumTimer) cancelAnimationFrame(momentumTimer);
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const now = Date.now();
+      const deltaY = lastY - e.clientY;
+      const dt = Math.max(now - lastTime, 1);
+      velocity = (deltaY / dt) * 16;
+      lastY = e.clientY;
+      lastTime = now;
+      frame.scrollTop += deltaY;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      overlay.style.pointerEvents = 'none'; // pass clicks through again
+      overlay.style.cursor = 'grab';
+      // Momentum
+      let v = velocity;
+      function momentum() {
+        if (Math.abs(v) < 0.5) return;
+        frame.scrollTop += v;
+        v *= 0.92;
+        momentumTimer = requestAnimationFrame(momentum);
+      }
+      momentum();
+    });
+
+    // Mouse wheel scrolls iframe directly
+    bezel.addEventListener('wheel', e => {
+      frame.scrollTop += e.deltaY;
+      e.preventDefault();
+    }, { passive: false });
+  </script>
+
 </body>
 </html>
